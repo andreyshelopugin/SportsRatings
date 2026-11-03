@@ -1,9 +1,43 @@
 # SportsRatings
 
-Data supporting the research on league-aware Glicko ratings for soccer clubs and national teams.
+Code and data for **"A Modified Glicko Model for Rating Soccer Clubs and National Teams Worldwide"**
+(submitted to *SN Computer Science*). An arXiv preprint will be available soon.
 
-The goal of the project is a single probabilistic rating scale that makes teams comparable
-across leagues, countries and confederations. Ratings for other sports will be added later.
+The model puts clubs and national teams of all countries on a single probabilistic rating scale:
+a Glicko rating system with strength-dependent draws and home advantage, league-aware initialization
+(a club enters at the level of its league, a national team at the level of its confederation),
+promotion and relegation rules, and goals expectations of a gradient boosting model.
+
+## Ratings
+
+The current ratings are in the root of the repository:
+
+| File | Content |
+|---|---|
+| `club_ratings.csv` | clubs: rank, rating, league |
+| `league_ratings.csv` | leagues: the weighted mean of the top 8 clubs, top 5 / 7 / 10, the ratings of the places 1-10 |
+| `national_ratings.csv` | national teams: rating, rating deviation, confederation, the last match |
+
+## Code
+
+```bash
+pip install -r requirements.txt
+```
+
+Run everything from the root of the repository.
+
+| File | Purpose |
+|---|---|
+| `run.py` | the full pipeline: matches, features, goals expectations (LightGBM), ratings. `REFIT = False` uses the fitted parameters in `data/soccer/params/` (1-2 hours), `REFIT = True` refits all parameters (about 30 hours) |
+| `paper.py` | all tables of the paper from the fitted parameters (`data/soccer/tables/`) |
+| `evaluation_pipeline.py` | the fit on the training seasons (before 2021) and the test predictions |
+| `soccer/club_ratings/`, `soccer/national_ratings/` | the rating models, their preprocessing and the fit |
+| `soccer/boostings/` | features and the goals model |
+| `soccer/matrix_models/` | the baselines: Skellam, Dixon-Coles, Markov |
+| `diagnostics/` | ablations, baselines, calibration |
+
+The raw match data (`data/soccer/club_matches.feather`, `national_team_matches.feather`) are not distributed:
+without them `run.py` skips the preprocessing of the raw matches and starts from `datasets/soccer/matches.feather` (see below).
 
 ## Data
 
@@ -48,7 +82,7 @@ national = matches[matches['source'] == 'national']
 ### Preprocessing
 
 - penalty shootout goals removed from the match score;
-- teams with identical names in different countries disambiguated (e.g. `River Plate Argentina`, `River Plate Uruguay`);
+- a team is identified by its Flashscore team id: clubs with identical names are told apart (e.g. `River Plate Argentina`, `River Plate Uruguay`), renamed clubs are merged;
 - forfeits, walkovers, annulled and abandoned matches removed;
 - neutral venues, matches played at the visiting team's stadium and tournament hosts annotated;
 - promotion/relegation playoffs separated from regular league matches.

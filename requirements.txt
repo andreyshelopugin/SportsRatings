@@ -1,0 +1,12 @@
+pyarrow
+numpy
+pandas
+scipy
+PyYAML
+pydantic
+scikit-learn
+lightgbm
+optuna
+tqdm
+matplotlib
+catboost

@@ -1,0 +1,41 @@
+soccer:
+  club_matches: data/soccer/club_matches.feather
+  national_matches: data/soccer/national_team_matches.feather
+  preprocessed_club_matches: datasets/soccer/preprocessed_club_matches.feather
+  preprocessed_national_matches: datasets/soccer/preprocessed_national_matches.feather
+  matches: datasets/soccer/matches.feather
+  glicko_matches: datasets/soccer/glicko_matches.feather
+  national_glicko_matches: datasets/soccer/national_glicko_matches.feather
+
+  params:
+    original_glicko: data/soccer/params/original_glicko_params.pkl
+    init: data/soccer/params/init_league_params.pkl
+    init_first_second_leagues: data/soccer/params/init_first_second_leagues_params.pkl
+    league_params: data/soccer/params/league_params.pkl
+    evaluation_league_params: data/soccer/params/evaluation_league_params.pkl
+    extra_time: data/soccer/params/extra_time_params.pkl
+    evaluation_extra_time: data/soccer/params/evaluation_extra_time_params.pkl
+
+  national_params:
+    global: data/soccer/params/national/global_params.pkl
+    confederation: data/soccer/params/national/confederation_params.pkl
+    country: data/soccer/params/national/country_params.pkl
+    final_stage: data/soccer/params/national/final_stage_params.pkl
+    extra_time: data/soccer/params/national/extra_time_params.pkl
+
+  outcomes:
+    datasets:
+      dataset: datasets/soccer/outcomes/dataset.feather
+      train: datasets/soccer/outcomes/train.feather
+      test: datasets/soccer/outcomes/test.feather
+      eval: datasets/soccer/outcomes/eval.feather
+
+    experiments:
+      lgbm: datasets/soccer/outcomes/experiments/lgbm_experiments_
+      catboost: datasets/soccer/outcomes/experiments/catboost_experiments_
+
+    lgbm_predictions: datasets/soccer/outcomes/lgbm_predictions.feather
+    catboost_predictions: datasets/soccer/outcomes/catboost_predictions.feather
+
+    lgbm_model: saved_models/lgbm_goals_model.pkl
+    catboost_model: saved_models/catboost_goals_model.pkl
