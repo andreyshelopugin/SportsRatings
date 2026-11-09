@@ -7,3 +7,5 @@ datasets/soccer/outcomes/
 datasets/soccer/*.feather
 !datasets/soccer/matches.feather
 data/soccer/tables/
+data/soccer/club_matches.feather
+data/soccer/national_team_matches.feather

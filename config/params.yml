@@ -6,6 +6,8 @@ soccer:
   matches: datasets/soccer/matches.feather
   glicko_matches: datasets/soccer/glicko_matches.feather
   national_glicko_matches: datasets/soccer/national_glicko_matches.feather
+  rating_history: datasets/soccer/rating_history.feather
+  national_rating_history: datasets/soccer/national_rating_history.feather
 
   params:
     original_glicko: data/soccer/params/original_glicko_params.pkl

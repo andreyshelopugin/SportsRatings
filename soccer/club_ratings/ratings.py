@@ -859,6 +859,22 @@ class Ratings(SoccerGlicko):
 
         return ratings
 
+    def rate_teams_with_history(self, league_params: dict, matches_params: dict) -> tuple[dict, pd.DataFrame]:
+        """Team ratings and their history: mu and rd of every team after every rating period it played in."""
+
+        ratings = self._rating_initialization(league_params)
+
+        history = []
+        for rating_period_id, team_matches in self.period_team_matches.items():
+            # update RD
+            self._inflate_rd(ratings, rating_period_id)
+
+            ratings = self._rate_teams_inside_period(ratings, team_matches, matches_params)
+
+            history += [(rating_period_id, team, ratings[team].mu, ratings[team].rd) for team in team_matches]
+
+        return ratings, pd.DataFrame(history, columns=['rating_period_id', 'team', 'rating', 'rd'])
+
     def _latest_championship_seasons(self, matches: pd.DataFrame) -> pd.DataFrame:
         """Latest championship season of every league used for the ratings table.
 
@@ -948,9 +964,9 @@ class Ratings(SoccerGlicko):
         else:
             team_leagues = self._last_known_team_leagues(matches)
 
-        ratings = {team: rating.mu for team, rating in ratings.items()}
-
-        ratings_df = pd.DataFrame.from_dict(ratings, orient='index').reset_index().rename(columns={'index': 'team', 0: 'rating'})
+        ratings_df = pd.DataFrame({'team': list(ratings),
+                                   'rating': [rating.mu for rating in ratings.values()],
+                                   'rd': [rating.rd for rating in ratings.values()]})
 
         ratings_df['league'] = ratings_df['team'].map(team_leagues)
 
@@ -1188,7 +1204,8 @@ class Ratings(SoccerGlicko):
         # ms_lift_update_mu of second leagues is tied to the first league inside _match_params
         matches_params = self._match_params(league_params)
 
-        ratings = self.rate_teams(league_params, matches_params)
+        ratings, history = self.rate_teams_with_history(league_params, matches_params)
+        history.to_feather(config.soccer['rating_history'])
 
         ratings_df = self.ratings_to_df(ratings, matches)
 

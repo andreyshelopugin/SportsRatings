@@ -1,217 +1,217 @@
 #,team,rating,rd,confederation,last_match
-1,Spain,2418,72,Europe,2026-07-19 19:00:00
-2,Argentina,2341,74,South America,2026-07-19 19:00:00
-3,France,2319,73,Europe,2026-07-18 21:00:00
-4,England,2273,73,Europe,2026-07-18 21:00:00
-5,Brazil,2224,80,South America,2026-07-05 20:00:00
-6,Portugal,2219,76,Europe,2026-07-06 19:00:00
-7,Netherlands,2190,75,Europe,2026-06-30 01:00:00
-8,Germany,2185,79,Europe,2026-06-29 20:30:00
-9,Colombia,2158,75,South America,2026-07-07 20:00:00
-10,Morocco,2143,76,Africa,2026-07-09 20:00:00
-11,Italy,2140,79,Europe,2026-03-31 18:45:00
-12,Belgium,2112,75,Europe,2026-07-10 19:00:00
-13,Croatia,2111,74,Europe,2026-07-02 23:00:00
-14,Switzerland,2094,72,Europe,2026-07-12 01:00:00
-15,Senegal,2083,77,Africa,2026-07-01 20:00:00
-16,Uruguay,2075,77,South America,2026-06-27 00:00:00
-17,Norway,2062,76,Europe,2026-07-11 21:00:00
-18,Mexico,2038,75,North & Central America,2026-07-06 01:00:00
-19,Denmark,2038,76,Europe,2026-03-31 18:45:00
-20,Ecuador,2030,76,South America,2026-07-01 01:00:00
-21,Turkey,2015,75,Europe,2026-06-26 02:00:00
-22,Nigeria,2000,75,Africa,2026-01-17 16:00:00
-23,Egypt,1998,73,Africa,2026-07-07 16:00:00
-24,Ukraine,1991,79,Europe,2026-03-26 19:45:00
-25,Ivory Coast,1984,77,Africa,2026-06-30 17:00:00
-26,Paraguay,1982,75,South America,2026-07-04 21:00:00
-27,Japan,1958,86,Asia,2026-06-29 17:00:00
-28,Scotland,1952,75,Europe,2026-06-24 22:00:00
-29,Algeria,1947,76,Africa,2026-07-03 03:00:00
-30,Serbia,1946,79,Europe,2025-11-16 17:00:00
-31,Austria,1941,76,Europe,2026-07-02 19:00:00
-32,Wales,1939,79,Europe,2026-03-26 19:45:00
-33,USA,1932,75,North & Central America,2026-07-07 00:00:00
-34,Cameroon,1928,79,Africa,2026-01-09 19:00:00
-35,Greece,1928,81,Europe,2025-11-18 19:45:00
-36,Hungary,1922,79,Europe,2025-11-16 14:00:00
-37,Poland,1904,77,Europe,2026-03-31 18:45:00
-38,Sweden,1903,76,Europe,2026-06-30 21:00:00
-39,Peru,1895,80,South America,2025-09-09 23:30:00
-40,Czech Republic,1889,75,Europe,2026-06-25 01:00:00
-41,Iran,1888,85,Asia,2026-06-27 03:00:00
-42,Australia,1885,81,Asia,2026-07-03 18:00:00
-43,Venezuela,1882,80,South America,2025-09-09 23:30:00
-44,Mali,1877,78,Africa,2026-01-09 16:00:00
-45,Chile,1875,81,South America,2025-09-09 23:30:00
-46,D.R. Congo,1870,71,Africa,2026-07-01 16:00:00
-47,Tunisia,1868,77,Africa,2026-06-25 23:00:00
-48,South Africa,1864,76,Africa,2026-06-28 19:00:00
-49,Canada,1848,75,North & Central America,2026-07-04 17:00:00
-50,Slovakia,1838,77,Europe,2026-03-26 19:45:00
-51,Slovenia,1837,77,Europe,2025-11-18 19:45:00
-52,Romania,1836,81,Europe,2026-03-26 17:00:00
-53,Burkina Faso,1834,79,Africa,2026-01-06 19:00:00
-54,Ireland,1832,80,Europe,2026-03-26 19:45:00
-55,South Korea,1832,84,Asia,2026-06-25 01:00:00
-56,Ghana,1826,79,Africa,2026-07-04 01:30:00
-57,Cape Verde,1805,79,Africa,2026-07-03 22:00:00
+1,Spain,2421,72,Europe,2026-07-19 19:00:00
+2,Argentina,2343,74,South America,2026-07-19 19:00:00
+3,France,2323,73,Europe,2026-07-18 21:00:00
+4,England,2275,73,Europe,2026-07-18 21:00:00
+5,Brazil,2225,80,South America,2026-07-05 20:00:00
+6,Portugal,2224,76,Europe,2026-07-06 19:00:00
+7,Netherlands,2192,75,Europe,2026-06-30 01:00:00
+8,Germany,2188,79,Europe,2026-06-29 20:30:00
+9,Colombia,2159,75,South America,2026-07-07 20:00:00
+10,Italy,2144,79,Europe,2026-03-31 18:45:00
+11,Morocco,2141,76,Africa,2026-07-09 20:00:00
+12,Croatia,2115,74,Europe,2026-07-02 23:00:00
+13,Belgium,2113,75,Europe,2026-07-10 19:00:00
+14,Switzerland,2097,72,Europe,2026-07-12 01:00:00
+15,Senegal,2081,77,Africa,2026-07-01 20:00:00
+16,Uruguay,2076,77,South America,2026-06-27 00:00:00
+17,Norway,2065,76,Europe,2026-07-11 21:00:00
+18,Denmark,2042,76,Europe,2026-03-31 18:45:00
+19,Mexico,2036,75,North & Central America,2026-07-06 01:00:00
+20,Ecuador,2031,76,South America,2026-07-01 01:00:00
+21,Turkey,2018,75,Europe,2026-06-26 02:00:00
+22,Nigeria,1998,75,Africa,2026-01-17 16:00:00
+23,Egypt,1996,73,Africa,2026-07-07 16:00:00
+24,Ukraine,1994,79,Europe,2026-03-26 19:45:00
+25,Paraguay,1983,75,South America,2026-07-04 21:00:00
+26,Ivory Coast,1982,77,Africa,2026-06-30 17:00:00
+27,Japan,1956,86,Asia,2026-06-29 17:00:00
+28,Scotland,1954,75,Europe,2026-06-24 22:00:00
+29,Serbia,1949,79,Europe,2025-11-16 17:00:00
+30,Austria,1945,76,Europe,2026-07-02 19:00:00
+31,Algeria,1944,76,Africa,2026-07-03 03:00:00
+32,Wales,1942,79,Europe,2026-03-26 19:45:00
+33,Greece,1930,81,Europe,2025-11-18 19:45:00
+34,USA,1929,75,North & Central America,2026-07-07 00:00:00
+35,Cameroon,1925,79,Africa,2026-01-09 19:00:00
+36,Hungary,1925,79,Europe,2025-11-16 14:00:00
+37,Poland,1906,77,Europe,2026-03-31 18:45:00
+38,Sweden,1905,76,Europe,2026-06-30 21:00:00
+39,Peru,1896,80,South America,2025-09-09 23:30:00
+40,Czech Republic,1892,75,Europe,2026-06-25 01:00:00
+41,Iran,1887,85,Asia,2026-06-27 03:00:00
+42,Venezuela,1884,80,South America,2025-09-09 23:30:00
+43,Australia,1883,81,Asia,2026-07-03 18:00:00
+44,Chile,1877,81,South America,2025-09-09 23:30:00
+45,Mali,1873,78,Africa,2026-01-09 16:00:00
+46,D.R. Congo,1868,71,Africa,2026-07-01 16:00:00
+47,Tunisia,1864,77,Africa,2026-06-25 23:00:00
+48,South Africa,1861,76,Africa,2026-06-28 19:00:00
+49,Canada,1846,75,North & Central America,2026-07-04 17:00:00
+50,Slovenia,1840,77,Europe,2025-11-18 19:45:00
+51,Slovakia,1839,77,Europe,2026-03-26 19:45:00
+52,Romania,1839,81,Europe,2026-03-26 17:00:00
+53,Ireland,1834,80,Europe,2026-03-26 19:45:00
+54,Burkina Faso,1832,79,Africa,2026-01-06 19:00:00
+55,South Korea,1831,84,Asia,2026-06-25 01:00:00
+56,Ghana,1825,79,Africa,2026-07-04 01:30:00
+57,Cape Verde,1802,79,Africa,2026-07-03 22:00:00
 58,Panama,1797,72,North & Central America,2026-06-27 21:00:00
-59,Bolivia,1776,80,South America,2026-04-01 03:00:00
-60,Costa Rica,1775,77,North & Central America,2025-11-19 01:00:00
-61,Kosovo,1773,79,Europe,2026-03-31 18:45:00
-62,Israel,1766,82,Europe,2025-11-16 19:45:00
-63,Albania,1761,81,Europe,2026-03-26 19:45:00
-64,Bosnia & Herzegovina,1761,74,Europe,2026-07-02 00:00:00
-65,North Macedonia,1751,81,Europe,2026-03-26 19:45:00
-66,Georgia,1743,78,Europe,2025-11-18 19:45:00
-67,Gabon,1736,81,Africa,2025-12-31 19:00:00
+59,Bolivia,1778,80,South America,2026-04-01 03:00:00
+60,Kosovo,1775,79,Europe,2026-03-31 18:45:00
+61,Costa Rica,1775,77,North & Central America,2025-11-19 01:00:00
+62,Israel,1768,82,Europe,2025-11-16 19:45:00
+63,Bosnia & Herzegovina,1763,74,Europe,2026-07-02 00:00:00
+64,Albania,1763,81,Europe,2026-03-26 19:45:00
+65,North Macedonia,1754,81,Europe,2026-03-26 19:45:00
+66,Georgia,1745,78,Europe,2025-11-18 19:45:00
+67,Gabon,1734,81,Africa,2025-12-31 19:00:00
 68,Saudi Arabia,1733,80,Asia,2026-06-27 00:00:00
 69,Uzbekistan,1722,86,Asia,2026-06-27 23:30:00
-70,Finland,1720,81,Europe,2025-11-14 17:00:00
-71,Uganda,1720,83,Africa,2025-12-30 16:00:00
-72,Zambia,1718,83,Africa,2025-12-29 19:00:00
-73,Guinea,1706,80,Africa,2025-10-14 16:00:00
-74,Angola,1703,80,Africa,2025-12-29 16:00:00
-75,Equatorial Guinea,1701,82,Africa,2025-12-31 16:00:00
-76,Iceland,1694,79,Europe,2025-11-16 17:00:00
+70,Finland,1722,81,Europe,2025-11-14 17:00:00
+71,Uganda,1716,83,Africa,2025-12-30 16:00:00
+72,Zambia,1715,83,Africa,2025-12-29 19:00:00
+73,Guinea,1703,80,Africa,2025-10-14 16:00:00
+74,Angola,1702,80,Africa,2025-12-29 16:00:00
+75,Equatorial Guinea,1698,82,Africa,2025-12-31 16:00:00
+76,Iceland,1697,79,Europe,2025-11-16 17:00:00
 77,Northern Ireland,1692,80,Europe,2026-03-26 19:45:00
-78,Benin,1689,81,Africa,2026-01-05 16:00:00
-79,Qatar,1677,78,Asia,2026-06-24 19:00:00
-80,Mozambique,1667,80,Africa,2026-01-05 19:00:00
+78,Benin,1686,81,Africa,2026-01-05 16:00:00
+79,Qatar,1679,78,Asia,2026-06-24 19:00:00
+80,Mozambique,1664,80,Africa,2026-01-05 19:00:00
 81,Iraq,1651,79,Asia,2026-06-26 19:00:00
-82,Montenegro,1639,81,Europe,2025-11-17 19:45:00
-83,Honduras,1637,74,North & Central America,2025-11-19 01:00:00
-84,Comoros,1637,84,Africa,2025-12-29 19:00:00
-85,Jamaica,1636,74,North & Central America,2026-03-31 21:00:00
-86,Jordan,1627,85,Asia,2026-06-28 02:00:00
-87,Bulgaria,1624,81,Europe,2025-11-18 19:45:00
-88,Gambia,1618,84,Africa,2025-10-14 13:00:00
-89,Tanzania,1614,81,Africa,2026-01-04 16:00:00
-90,Sierra Leone,1611,88,Africa,2025-10-12 19:00:00
-91,Kenya,1594,88,Africa,2025-10-14 19:00:00
-92,Libya,1590,86,Africa,2025-10-13 16:00:00
-93,Madagascar,1585,84,Africa,2025-10-12 19:00:00
-94,Sudan,1584,81,Africa,2026-01-03 16:00:00
-95,Belarus,1580,82,Europe,2025-11-18 19:45:00
-96,New Zealand,1574,117,Australia & Oceania,2026-06-27 03:00:00
-97,Haiti,1573,81,North & Central America,2026-06-24 22:00:00
-98,Niger,1572,89,Africa,2025-10-12 13:00:00
-99,Zimbabwe,1564,83,Africa,2025-12-29 16:00:00
-100,Mauritania,1561,83,Africa,2025-10-14 19:00:00
-101,United Arab Emirates,1557,81,Asia,2025-11-18 16:00:00
-102,Togo,1555,84,Africa,2025-10-13 13:00:00
+82,Montenegro,1642,82,Europe,2025-11-17 19:45:00
+83,Honduras,1638,74,North & Central America,2025-11-19 01:00:00
+84,Jamaica,1636,74,North & Central America,2026-03-31 21:00:00
+85,Comoros,1634,84,Africa,2025-12-29 19:00:00
+86,Jordan,1626,85,Asia,2026-06-28 02:00:00
+87,Bulgaria,1626,81,Europe,2025-11-18 19:45:00
+88,Gambia,1616,84,Africa,2025-10-14 13:00:00
+89,Tanzania,1611,81,Africa,2026-01-04 16:00:00
+90,Sierra Leone,1610,88,Africa,2025-10-12 19:00:00
+91,Kenya,1592,88,Africa,2025-10-14 19:00:00
+92,Libya,1588,86,Africa,2025-10-13 16:00:00
+93,Madagascar,1583,83,Africa,2025-10-12 19:00:00
+94,Sudan,1582,81,Africa,2026-01-03 16:00:00
+95,Belarus,1581,82,Europe,2025-11-18 19:45:00
+96,Haiti,1575,80,North & Central America,2026-06-24 22:00:00
+97,New Zealand,1572,117,Australia & Oceania,2026-06-27 03:00:00
+98,Niger,1569,89,Africa,2025-10-12 13:00:00
+99,Zimbabwe,1562,83,Africa,2025-12-29 16:00:00
+100,Mauritania,1558,83,Africa,2025-10-14 19:00:00
+101,United Arab Emirates,1558,81,Asia,2025-11-18 16:00:00
+102,Armenia,1556,80,Europe,2025-11-16 14:00:00
 103,Guatemala,1555,79,North & Central America,2025-11-19 01:00:00
-104,Armenia,1555,80,Europe,2025-11-16 14:00:00
-105,Guinea Bissau,1553,83,Africa,2025-10-12 19:00:00
-106,Namibia,1549,84,Africa,2025-10-13 13:00:00
-107,Rwanda,1549,86,Africa,2025-10-14 16:00:00
-108,Luxembourg,1546,80,Europe,2026-03-31 16:00:00
-109,Kazakhstan,1542,82,Europe,2025-11-15 14:00:00
-110,Liberia,1536,87,Africa,2025-10-13 13:00:00
-111,Malawi,1533,85,Africa,2025-10-13 13:00:00
-112,Ethiopia,1524,82,Africa,2026-03-31 14:00:00
-113,Burundi,1517,86,Africa,2026-03-31 14:00:00
-114,Syria,1516,93,Asia,2026-03-31 17:15:00
-115,Eritrea,1499,151,Africa,2026-03-31 15:00:00
-116,Oman,1496,85,Asia,2025-10-11 17:15:00
-117,Congo,1495,89,Africa,2025-10-14 19:00:00
-118,Botswana,1488,85,Africa,2025-12-30 19:00:00
-119,Trinidad & Tobago,1481,78,North & Central America,2025-11-19 01:00:00
-120,Curacao,1475,81,North & Central America,2026-06-25 20:00:00
-121,Faroe Islands,1468,83,Europe,2025-11-14 19:45:00
-122,Central Africa,1466,86,Africa,2025-10-12 16:00:00
-123,Azerbaijan,1464,85,Europe,2025-11-16 17:00:00
-124,Bahrain,1463,90,Asia,2025-06-10 11:00:00
-125,Cyprus,1462,81,Europe,2025-11-15 17:00:00
-126,Estonia,1455,83,Europe,2025-11-13 17:00:00
-127,China,1454,86,Asia,2025-06-10 11:00:00
-128,Lesotho,1441,88,Africa,2026-03-29 16:00:00
-129,Latvia,1433,82,Europe,2026-03-31 16:00:00
-130,Suriname,1429,80,North & Central America,2026-03-26 22:00:00
-131,El Salvador,1423,76,North & Central America,2026-03-29 19:00:00
+104,Togo,1553,84,Africa,2025-10-13 13:00:00
+105,Guinea Bissau,1551,83,Africa,2025-10-12 19:00:00
+106,Luxembourg,1547,80,Europe,2026-03-31 16:00:00
+107,Namibia,1547,84,Africa,2025-10-13 13:00:00
+108,Rwanda,1546,86,Africa,2025-10-14 16:00:00
+109,Kazakhstan,1544,82,Europe,2025-11-15 14:00:00
+110,Liberia,1533,87,Africa,2025-10-13 13:00:00
+111,Malawi,1531,85,Africa,2025-10-13 13:00:00
+112,Ethiopia,1522,82,Africa,2026-03-31 14:00:00
+113,Burundi,1515,86,Africa,2026-03-31 14:00:00
+114,Syria,1515,93,Asia,2026-03-31 17:15:00
+115,Oman,1496,85,Asia,2025-10-11 17:15:00
+116,Eritrea,1496,151,Africa,2026-03-31 15:00:00
+117,Congo,1493,89,Africa,2025-10-14 19:00:00
+118,Botswana,1485,85,Africa,2025-12-30 19:00:00
+119,Trinidad & Tobago,1483,78,North & Central America,2025-11-19 01:00:00
+120,Curacao,1477,81,North & Central America,2026-06-25 20:00:00
+121,Faroe Islands,1470,83,Europe,2025-11-14 19:45:00
+122,Azerbaijan,1465,85,Europe,2025-11-16 17:00:00
+123,Central Africa,1465,86,Africa,2025-10-12 16:00:00
+124,Cyprus,1464,81,Europe,2025-11-15 17:00:00
+125,Bahrain,1463,90,Asia,2025-06-10 11:00:00
+126,Estonia,1457,83,Europe,2025-11-13 17:00:00
+127,China,1455,86,Asia,2025-06-10 11:00:00
+128,Lesotho,1439,88,Africa,2026-03-29 16:00:00
+129,Latvia,1434,82,Europe,2026-03-31 16:00:00
+130,Suriname,1430,80,North & Central America,2026-03-26 22:00:00
+131,El Salvador,1425,76,North & Central America,2026-03-29 19:00:00
 132,Palestine,1414,90,Asia,2025-06-10 18:15:00
 133,Moldova,1413,84,Europe,2025-11-16 19:45:00
-134,Guadeloupe,1394,90,North & Central America,2025-06-24 23:00:00
-135,Lithuania,1394,82,Europe,2025-11-17 19:45:00
-136,North Korea,1373,96,Asia,2025-06-10 16:00:00
-137,Thailand,1369,93,Asia,2026-03-31 13:30:00
-138,Martinique,1361,88,North & Central America,2026-03-29 19:00:00
+134,Lithuania,1395,82,Europe,2025-11-17 19:45:00
+135,Guadeloupe,1395,90,North & Central America,2025-06-24 23:00:00
+136,North Korea,1374,96,Asia,2025-06-10 16:00:00
+137,Thailand,1370,93,Asia,2026-03-31 13:30:00
+138,Martinique,1362,88,North & Central America,2026-03-29 19:00:00
 139,Nicaragua,1361,83,North & Central America,2025-11-19 01:00:00
-140,Indonesia,1351,87,Asia,2025-10-11 19:30:00
+140,Indonesia,1352,87,Asia,2025-10-11 19:30:00
 141,Kyrgyzstan,1346,91,Asia,2025-06-10 13:45:00
-142,Tajikistan,1334,96,Asia,2026-03-31 15:00:00
-143,Kuwait,1333,94,Asia,2025-06-10 11:00:00
-144,Lebanon,1330,91,Asia,2026-06-04 17:00:00
-145,Chad,1329,88,Africa,2026-03-31 14:00:00
+142,Tajikistan,1335,96,Asia,2026-03-31 15:00:00
+143,Kuwait,1334,94,Asia,2025-06-10 11:00:00
+144,Lebanon,1331,90,Asia,2026-06-04 17:00:00
+145,Chad,1327,88,Africa,2026-03-31 14:00:00
 146,Malta,1322,86,Europe,2026-03-31 16:00:00
-147,South Sudan,1317,88,Africa,2026-03-29 14:00:00
-148,Guyana,1313,83,North & Central America,2026-03-30 20:30:00
-149,Eswatini,1311,87,Africa,2026-03-31 15:00:00
-150,Cuba,1305,81,North & Central America,2026-03-29 22:00:00
-151,Dominican Republic,1298,83,North & Central America,2026-03-29 22:00:00
+147,Guyana,1315,83,North & Central America,2026-03-30 20:30:00
+148,South Sudan,1314,88,Africa,2026-03-29 14:00:00
+149,Eswatini,1310,87,Africa,2026-03-31 15:00:00
+150,Cuba,1307,81,North & Central America,2026-03-29 22:00:00
+151,Dominican Republic,1299,83,North & Central America,2026-03-29 22:00:00
 152,Vietnam,1298,92,Asia,2026-03-31 13:00:00
-153,Turkmenistan,1254,99,Asia,2026-03-31 13:30:00
-154,Sao Tome and Principe,1235,93,Africa,2026-03-31 14:00:00
-155,Malaysia,1228,95,Asia,2026-03-31 13:00:00
+153,Turkmenistan,1256,99,Asia,2026-03-31 13:30:00
+154,Sao Tome and Principe,1234,93,Africa,2026-03-31 14:00:00
+155,Malaysia,1229,95,Asia,2026-03-31 13:00:00
 156,Puerto Rico,1225,93,North & Central America,2025-06-11 01:00:00
-157,French Guiana,1215,96,North & Central America,2024-11-19 23:00:00
-158,Mauritius,1211,100,Africa,2026-03-31 16:00:00
-159,Yemen,1209,92,Asia,2026-06-04 17:00:00
-160,Philippines,1201,96,Asia,2026-03-31 15:00:00
+157,French Guiana,1216,96,North & Central America,2024-11-19 23:00:00
+158,Yemen,1210,92,Asia,2026-06-04 17:00:00
+159,Mauritius,1210,100,Africa,2026-03-31 16:00:00
+160,Philippines,1203,96,Asia,2026-03-31 15:00:00
 161,Singapore,1196,92,Asia,2026-03-31 13:00:00
-162,Somalia,1189,108,Africa,2026-03-31 16:00:00
-163,Bermuda,1185,81,North & Central America,2025-11-19 01:00:00
+162,Somalia,1188,108,Africa,2026-03-31 16:00:00
+163,Bermuda,1188,81,North & Central America,2025-11-19 01:00:00
 164,Grenada,1181,91,North & Central America,2025-06-10 19:00:00
-165,Andorra,1173,89,Europe,2025-11-13 19:45:00
-166,Djibouti,1173,100,Africa,2026-03-29 14:00:00
-167,India,1137,92,Asia,2026-03-31 14:30:00
-168,Gibraltar,1135,87,Europe,2026-03-31 16:00:00
-169,Saint Kitts and Nevis,1123,86,North & Central America,2025-11-18 21:00:00
+165,Andorra,1174,89,Europe,2025-11-13 19:45:00
+166,Djibouti,1171,100,Africa,2026-03-29 14:00:00
+167,India,1138,92,Asia,2026-03-31 14:30:00
+168,Gibraltar,1134,87,Europe,2026-03-31 16:00:00
+169,Saint Kitts and Nevis,1124,86,North & Central America,2025-11-18 21:00:00
 170,Saint Vincent and the Grenadines,1121,82,North & Central America,2026-03-29 20:00:00
-171,Hong Kong,1117,92,Asia,2026-03-31 14:30:00
-172,Seychelles,1117,109,Africa,2026-03-29 16:00:00
+171,Hong Kong,1119,92,Asia,2026-03-31 14:30:00
+172,Seychelles,1115,109,Africa,2026-03-29 16:00:00
 173,Saint Lucia,1111,89,North & Central America,2025-11-16 00:00:00
 174,Montserrat,1097,90,North & Central America,2025-06-11 00:00:00
 175,Belize,1096,84,North & Central America,2026-03-30 20:30:00
-176,New Caledonia,1092,115,Australia & Oceania,2026-03-27 03:00:00
-177,Myanmar,1087,96,Asia,2026-03-31 10:00:00
+176,New Caledonia,1087,115,Australia & Oceania,2026-03-27 03:00:00
+177,Myanmar,1087,97,Asia,2026-03-31 10:00:00
 178,Liechtenstein,1085,89,Europe,2025-11-18 19:45:00
-179,Sint Maarten,1061,93,North & Central America,2026-03-30 23:30:00
-180,Saint Martin,1049,95,North & Central America,2026-03-30 00:30:00
-181,Afghanistan,1040,95,Asia,2026-03-31 17:15:00
-182,Solomon Islands,1023,115,Australia & Oceania,2024-11-17 06:00:00
-183,Antigua and Barbuda,1014,85,North & Central America,2025-11-18 23:00:00
-184,Fiji,1010,109,Australia & Oceania,2025-03-21 06:00:00
-185,Tahiti,1010,112,Australia & Oceania,2025-03-21 02:00:00
-186,Vanuatu,991,131,Australia & Oceania,2024-11-18 03:00:00
-187,San Marino,984,98,Europe,2025-11-18 19:45:00
-188,Aruba,962,91,North & Central America,2025-11-15 20:00:00
-189,Bangladesh,959,96,Asia,2026-03-31 13:00:00
+179,Sint Maarten,1060,93,North & Central America,2026-03-30 23:30:00
+180,Saint Martin,1050,95,North & Central America,2026-03-30 00:30:00
+181,Afghanistan,1039,95,Asia,2026-03-31 17:15:00
+182,Solomon Islands,1021,115,Australia & Oceania,2024-11-17 06:00:00
+183,Antigua and Barbuda,1016,85,North & Central America,2025-11-18 23:00:00
+184,Fiji,1007,109,Australia & Oceania,2025-03-21 06:00:00
+185,Tahiti,1006,112,Australia & Oceania,2025-03-21 02:00:00
+186,Vanuatu,988,131,Australia & Oceania,2024-11-18 03:00:00
+187,San Marino,984,97,Europe,2025-11-18 19:45:00
+188,Aruba,961,91,North & Central America,2025-11-15 20:00:00
+189,Bangladesh,957,96,Asia,2026-03-31 13:00:00
 190,Sri Lanka,956,105,Asia,2026-03-31 11:30:00
-191,Brunei,947,115,Asia,2026-03-31 13:30:00
-192,Cambodia,944,107,Asia,2024-09-10 13:00:00
-193,Mongolia,941,116,Asia,2024-09-10 09:00:00
-194,Papua New Guinea,931,115,Australia & Oceania,2024-11-17 06:00:00
-195,Barbados,931,83,North & Central America,2026-03-29 20:00:00
-196,Dominica,928,87,North & Central America,2026-03-30 23:30:00
-197,Bhutan,924,105,Asia,2026-03-31 13:30:00
-198,Cayman Islands,923,90,North & Central America,2026-03-30 00:00:00
-199,Maldives,923,100,Asia,2026-03-31 11:30:00
-200,Laos,913,109,Asia,2026-03-31 13:00:00
-201,Bonaire,900,100,North & Central America,2026-03-30 00:30:00
-202,Nepal,885,98,Asia,2026-03-31 13:00:00
-203,Pakistan,870,112,Asia,2026-03-31 10:00:00
-204,Guam,869,122,Asia,2023-10-17 04:45:00
-205,Chinese Taipei,829,97,Asia,2026-03-31 11:30:00
-206,British Virgin Islands,799,91,North & Central America,2026-03-29 21:30:00
-207,Turks and Caicos Islands,794,98,North & Central America,2024-10-16 02:00:00
-208,Macau,792,130,Asia,2024-09-10 12:30:00
-209,Bahamas,785,88,North & Central America,2026-03-30 00:00:00
-210,Timor-Leste,754,107,Asia,2026-03-31 11:30:00
+191,Brunei,943,115,Asia,2026-03-31 13:30:00
+192,Cambodia,941,107,Asia,2024-09-10 13:00:00
+193,Mongolia,939,116,Asia,2024-09-10 09:00:00
+194,Barbados,933,84,North & Central America,2026-03-29 20:00:00
+195,Papua New Guinea,929,115,Australia & Oceania,2024-11-17 06:00:00
+196,Dominica,927,87,North & Central America,2026-03-30 23:30:00
+197,Bhutan,927,105,Asia,2026-03-31 13:30:00
+198,Maldives,924,100,Asia,2026-03-31 11:30:00
+199,Cayman Islands,922,90,North & Central America,2026-03-30 00:00:00
+200,Laos,910,109,Asia,2026-03-31 13:00:00
+201,Bonaire,896,100,North & Central America,2026-03-30 00:30:00
+202,Nepal,884,98,Asia,2026-03-31 13:00:00
+203,Pakistan,867,112,Asia,2026-03-31 10:00:00
+204,Guam,866,122,Asia,2023-10-17 04:45:00
+205,Chinese Taipei,828,97,Asia,2026-03-31 11:30:00
+206,British Virgin Islands,797,91,North & Central America,2026-03-29 21:30:00
+207,Macau,788,130,Asia,2024-09-10 12:30:00
+208,Turks and Caicos Islands,787,98,North & Central America,2024-10-16 02:00:00
+209,Bahamas,784,88,North & Central America,2026-03-30 00:00:00
+210,Timor-Leste,753,107,Asia,2026-03-31 11:30:00
 211,United States Virgin Islands,713,96,North & Central America,2024-10-13 00:00:00
-212,Anguilla,699,91,North & Central America,2026-03-29 21:30:00
-213,Samoa,693,123,Australia & Oceania,2024-11-18 06:30:00
-214,Tonga,649,154,Australia & Oceania,2024-09-09 02:00:00
-215,Cook Islands,590,159,Australia & Oceania,2024-09-05 22:00:00
-216,American Samoa,568,187,Australia & Oceania,2024-09-06 02:00:00
+212,Anguilla,696,91,North & Central America,2026-03-29 21:30:00
+213,Samoa,690,123,Australia & Oceania,2024-11-18 06:30:00
+214,Tonga,642,154,Australia & Oceania,2024-09-09 02:00:00
+215,Cook Islands,589,159,Australia & Oceania,2024-09-05 22:00:00
+216,American Samoa,566,186,Australia & Oceania,2024-09-06 02:00:00

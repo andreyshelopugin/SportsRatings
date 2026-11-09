@@ -419,7 +419,8 @@ class NationalRatings(Ratings):
 
         matches_params = self._match_params(team_params)
 
-        ratings = self.rate_teams(team_params, matches_params)
+        ratings, history = self.rate_teams_with_history(team_params, matches_params)
+        history.to_feather(config.soccer['national_rating_history'])
 
         ratings_df = self.ratings_to_df(ratings)
 

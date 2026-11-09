@@ -23,73 +23,22 @@ class DataPreprocessor(object):
                                    'home_team_id', 'away_team_id', 'venue', 'venue_city', 'capacity', 'attendance',
                                    'referee', 'referee_country']
 
+        # columns of the notes of Flashscore, parsed in the Flashscore project (MatchNotes)
+        self.notes_columns = ['original_long_note', 'is_on_visit_stadium', 'is_no_spectators', 'is_different_stadium',
+                              'is_neutral_venue', 'is_limited_spectators', 'is_replayed_if_draw', 'leg',
+                              'first_leg_home', 'first_leg_away', 'aggregate_home', 'aggregate_away']
+
         # knockout rounds in the 'round' column
         self.knockout_round_pattern = r'^(Final|Semi-finals|Quarter-finals|1/\d+-finals|3rd place|4th place|5th place)$'
 
         self.matches_columns = ['country', 'tournament', 'season', 'full_date', 'home_team', 'away_team', 'home_suffix',
                                 'away_suffix', 'home_score', 'away_score', 'date_raw', 'long_note', 'start_season_year', 'note', 'tournament_type',
-                                'is_with_full_date', 'season_id'] + self.new_format_columns
+                                'is_with_full_date', 'season_id'] + self.new_format_columns + self.notes_columns
 
         self.domestic_tournaments = {'first_league', 'second_league', 'cup', 'super_cup'}
         self.international_tournaments = {'international_cup', 'international_super_cup'}
         self.club_tournaments = {'first_league', 'second_league', 'cup', 'super_cup',
                                  'international_cup', 'international_super_cup'}
-
-    @staticmethod
-    def _fix_scores(matches: pd.DataFrame) -> pd.DataFrame:
-        """Strip penalty counts from raw score strings and cast to int.
-
-        Flashscore encodes penalty shootouts in two ways:
-          - '<goals>(<penalties>)', e.g. '1(4)': only the goal count is kept;
-          - old rows without brackets: the shootout winner gets +1 goal in the match score and in the aggregate,
-            e.g. 1-1 after extra time → '2'-'1'.
-            Checked: single Pen matches 10791 of 10810 have score difference 1,
-            second legs Pen 1538 of 1558 have aggregate difference 1.
-            The extra goal is removed, so the score is the score after extra time.
-
-        '1(4)' → 1
-        '0(3)' → 0
-        '2'    → 2
-        """
-        is_bracket_score = (matches['home_score'].astype(str).str.contains('(', regex=False)
-                            | matches['away_score'].astype(str).str.contains('(', regex=False))
-
-        for col in ('home_score', 'away_score'):
-            matches[col] = (matches[col]
-                            .astype(str)
-                            .str.extract(r'^(\d+)', expand=False)
-                            .astype(int))
-
-        # shootout winner +1 goal: by aggregate for second legs, by match score for single matches
-        # "1st leg result" is written in the current match orientation, so aggregate = first leg + match score
-        # new rows (with flashscore_id): the score is already without the shootout, penalties are in home_penalty / away_penalty
-        is_old_row = matches['flashscore_id'].fillna('') == ''
-
-        is_penalty_extra_goal = (matches['note'] == 'Pen') & ~is_bracket_score & is_old_row
-
-        aggregate_home = matches['aggregate_home'].fillna(matches['first_leg_home'] + matches['home_score'])
-        aggregate_away = matches['aggregate_away'].fillna(matches['first_leg_away'] + matches['away_score'])
-
-        tie_difference = ((aggregate_home - aggregate_away)
-                          .fillna(matches['home_score'] - matches['away_score'])
-                          .astype(int))
-
-        is_anomaly = is_penalty_extra_goal & (tie_difference.abs() != 1)
-        if is_anomaly.any():
-            print('#Pen matches with tie difference != 1:', is_anomaly.sum())
-            print(matches.loc[is_anomaly, ['tournament', 'season', 'home_team', 'away_team', 'home_score', 'away_score',
-                                           'first_leg_home', 'first_leg_away', 'aggregate_home', 'aggregate_away']])
-
-        is_home_extra_goal = is_penalty_extra_goal & (tie_difference == 1)
-        is_away_extra_goal = is_penalty_extra_goal & (tie_difference == -1)
-
-        matches['home_score'] = np.where(is_home_extra_goal, matches['home_score'] - 1, matches['home_score'])
-        matches['away_score'] = np.where(is_away_extra_goal, matches['away_score'] - 1, matches['away_score'])
-
-        matches['aggregate_home'] = matches['aggregate_home'].where(~is_home_extra_goal, matches['aggregate_home'] - 1)
-        matches['aggregate_away'] = matches['aggregate_away'].where(~is_away_extra_goal, matches['aggregate_away'] - 1)
-
-        return matches
 
     def _knockout_stage(self, matches: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
         """(has_stage, is_knockout) from tournament_stage and round of the new rows, both are known before the match.
@@ -129,170 +78,6 @@ class DataPreprocessor(object):
         is_knockout = has_stage & (is_knockout_round | is_pair_stage)
 
         return has_stage, is_knockout
-
-    @staticmethod
-    def _drop_forfeiting_wins(matches: pd.DataFrame) -> pd.DataFrame:
-        """Remove forfeited matches based on notes."""
-
-        is_forfeiting_win = (
-                matches['note'].isin(['Awrd', 'WO', 'Abn'])
-                | matches['long_note'].str.contains('Federation decision')
-                | matches['long_note'].str.contains('Originally abandoned after')
-                | matches['long_note'].str.contains('Abandoned')
-                | matches['long_note'].str.contains('walkover')
-                | matches['long_note'].str.contains('Postponed')
-                | matches['long_note'].str.contains('Canceled')
-                | matches['long_note'].str.contains('Result was annulled')
-                | matches['long_note'].str.contains('fielded an ineligible player')
-        )
-
-        matches = matches[~is_forfeiting_win]
-
-        print('#dropped forfeiting wins:', sum(is_forfeiting_win))
-
-        # without a score and without a note (e.g. '-' : '-'), mostly not played
-        is_without_score = ~(matches['home_score'].astype(str).str.match(r'^\s*\d')
-                             & matches['away_score'].astype(str).str.match(r'^\s*\d'))
-        if is_without_score.any():
-            print('#dropped matches without a score:', is_without_score.sum())
-            print(matches.loc[is_without_score, ['country', 'tournament', 'season', 'full_date', 'home_team', 'away_team',
-                                                 'home_score', 'away_score']].to_string(index=False))
-
-        matches = matches[~is_without_score]
-
-        return matches
-
-    @staticmethod
-    def _notes_parser(matches: pd.DataFrame) -> pd.DataFrame:
-        """Parse match notes for home-field advantage adjustments.
-        e.g. limited fans, neutral venue, no spectators. AET = After Extra Time."""
-
-        # for debug
-        matches['original_long_note'] = matches['long_note']
-
-        # important case: away team has home advantage
-        matches['is_on_visit_stadium'] = ((matches['long_note'] == 'Played on the field of the visiting team.')
-                                          | matches['long_note'].str.contains('Played on the field of the visiting team.'))
-
-        matches['long_note'] = np.where(matches['long_note'] == 'Played on the field of the visiting team.', '', matches['long_note'])
-
-        # complicated cases
-        matches['long_note'] = np.where(matches['long_note'] == 'Neutral location - A. Le Coq Arena.',
-                                        'Neutral location.',
-                                        matches['long_note'])
-
-        matches['long_note'] = np.where(matches['long_note'] == 'Neutral location - Estádio Dr. Magalhães Pessoa.',
-                                        'Neutral location.',
-                                        matches['long_note'])
-
-        matches['long_note'] = np.where(matches['long_note'] == 'Playing home matches at a different stadium - Estádio Dr. Magalhães Pessoa.',
-                                        'Playing home matches at a different stadium.',
-                                        matches['long_note'])
-
-        matches['long_note'] = np.where(
-            matches['long_note'] == '1st leg. Playing home matches at a different stadium - Stadion Miejski al. Unii Lubelskiej 2.',
-            '1st leg. Playing home matches at a different stadium.',
-            matches['long_note'])
-
-        note = matches['long_note'].fillna('')
-
-        # strip stadium/venue detail names
-        note = note.str.replace(r'Playing home matches at a different stadium\s*-\s*[^.]+\.?',
-                                'Playing home matches at a different stadium.', regex=True)
-
-        # complicated cases
-        note = note.str.replace('Neutral location - A. Le Coq Arena.', 'Neutral location.', regex=True)
-        note = note.str.replace('Playing home matches at a different stadium - Stadion Miejski al. Unii Lubelskiej 2.',
-                                'Playing home matches at a different stadium', regex=True)
-
-        note = note.str.replace(r'Neutral location\s*-\s*[^.]+\.?', 'Neutral location.', regex=True)
-        note = note.str.replace(r'Limited number of spectators\s*-\s*[^.]+\.?', 'Limited number of spectators.', regex=True)
-        note = note.str.replace(r'Limited number of spectators\.\s*\d[\d\s]*\.?', 'Limited number of spectators.', regex=True)
-
-        # standardize naming
-        note = (note
-                .str.replace(r'\bFirst leg\b', '1st leg', regex=True)
-                .str.replace(r'\bSecond leg\b', '2nd leg', regex=True)
-                .str.replace(r'\s+', ' ', regex=True)
-                .str.strip())
-
-        # extract boolean flags (substring match + remove)
-        flags = {
-            'is_no_spectators': r'No spectators\.?',
-            'is_different_stadium': r'Playing home matches at a different stadium\.?',
-            'is_neutral_venue': r'Neutral location\.?',
-            'is_limited_spectators': r'Limited number of spectators\.?',
-            'is_replayed_if_draw': r'Replayed if draw\.?',
-        }
-        for col, pattern in flags.items():
-            matches[col] = note.str.contains(pattern, na=False)
-            note = note.str.replace(pattern, '', regex=True)
-
-        # extract leg number
-        matches['leg'] = note.str.extract(r'(\d+)(?:st|nd|rd)\s*leg(?!\s*result)', expand=False).astype('Int64')
-        note = note.str.replace(r'\d+(?:st|nd|rd)\s*leg(?!\s*result)\.?', '', regex=True)
-
-        # extract first leg result
-        flr = note.str.extract(r'1st leg result:\s*(\d+)-(\d+)')
-        matches['first_leg_home'] = pd.to_numeric(flr[0], errors='coerce').astype('Int64')
-        matches['first_leg_away'] = pd.to_numeric(flr[1], errors='coerce').astype('Int64')
-        note = note.str.replace(r'1st leg result:\s*\d+-\d+\.?', '', regex=True)
-
-        # extract aggregate
-        agg = note.str.extract(r'[Aa]ggregate:\s*(\d+)-(\d+)')
-        matches['aggregate_home'] = pd.to_numeric(agg[0], errors='coerce').astype('Int64')
-        matches['aggregate_away'] = pd.to_numeric(agg[1], errors='coerce').astype('Int64')
-        note = note.str.replace(r'[Aa]ggregate:\s*\d+-\d+\.?', '', regex=True)
-
-        # extract replay
-        # matches['is_replay'] = note.str.contains(r'Replay \(first match was draw\)', na=False)
-        note = note.str.replace(r'Replay \(first match was draw\)\.?', '', regex=True)
-
-        # extract series info
-        # matches['series_info'] = note.str.extract(r'((?:.*?(?:wins|leads)\s+series\s+\d+-\d+|Series tied \d+-\d+)\.?)', expand=False)
-        note = note.str.replace(r'(?:.*?(?:wins|leads)\s+series\s+\d+-\d+|Series tied \d+-\d+)\.?', '', regex=True)
-
-        # clean remaining notes
-        drop_exact = [
-            'Final result only.',
-            'Final result only',
-            'Format: 2x40 minutes.',
-            'Format: 2x33 minutes.',
-            'Start delayed.',
-            'Start delayed',
-            '[roundNo].',
-            '[roundNo]',
-            'Delayed due to traffic problems.',
-            'Kck off delayed with 30 minutes.',
-            'Interrupted due to rain.',
-            'Interrupted due to technical problems.',
-            'Interrupted due to bad weather.',
-            'Interrupted due to power failure.',
-            'Interrupted due to darkness.',
-            'Interrupted due to bad light.',
-            'Interrupted due to spectators riots.',
-            'Played with special rules.',
-            'Played on the field of the visiting team.',
-            'Played indoor.',
-            # leftovers of 'Replayed if draw. Final.' / 'Replayed if draw. Semi-finals.' after is_replayed_if_draw extraction
-            'Semi-finals.',
-            'Final.',
-        ]
-        for val in drop_exact:
-            note = note.str.replace(val, '', regex=False)
-
-        matches['is_neutral_venue'] = (matches['is_neutral_venue'] == True) | note.str.contains(r'Playing at\b', na=False)
-        note = note.str.replace(r'Playing at\s+[^.]+\.?', '', regex=True)
-
-        # final cleanup
-        matches['long_note'] = (note
-                                .str.replace(r'\s+', ' ', regex=True)
-                                .str.strip()
-                                .str.strip('.')
-                                .str.strip()
-                                .replace('', pd.NA))
-
-        return matches
 
     @staticmethod
     def _handle_visit_stadium(matches: pd.DataFrame) -> pd.DataFrame:
@@ -471,7 +256,7 @@ class ClubDataPreprocessor(DataPreprocessor):
         super().__init__()
         self.matches_columns = ['country', 'tournament', 'season', 'full_date', 'home_team', 'away_team', 'home_suffix',
                                 'away_suffix', 'home_score', 'away_score', 'date_raw', 'long_note', 'start_season_year', 'note', 'tournament_type',
-                                'is_with_full_date', 'season_id'] + self.new_format_columns
+                                'is_with_full_date', 'season_id'] + self.new_format_columns + self.notes_columns
 
         # Club World Cup: host country by edition (see _club_world_cup_hosts)
         self.club_world_cup_hosts = CLUB_WORLD_CUP_HOSTS
@@ -519,17 +304,9 @@ class ClubDataPreprocessor(DataPreprocessor):
         # leave club tournaments
         matches = matches[matches['tournament_type'].isin(self.club_tournaments)]
 
-        # before any comparison of team names
-        matches['home_team'] = matches['home_team'].str.strip()
-        matches['away_team'] = matches['away_team'].str.strip()
-
         matches['is_championship'] = matches['tournament_type'].isin({'first_league', 'second_league'})
 
-        matches = self._drop_forfeiting_wins(matches)
-
         matches = self._drop_cup_matches_with_non_championship_teams(matches)
-
-        matches = self._notes_parser(matches)
 
         # two teams of one country under the same name play each other (Hapoel Jerusalem, Tokushima):
         # they cannot be told apart by the name, the matches are removed
@@ -537,8 +314,6 @@ class ClubDataPreprocessor(DataPreprocessor):
         print(f'matches of two teams with the same name: {is_same_name.sum()}, '
               f'{matches.loc[is_same_name, "home_team"].value_counts().to_dict()}')
         matches = matches[~is_same_name]
-
-        matches = self._fix_scores(matches)
 
         matches = self._handle_visit_stadium(matches)
 
@@ -635,9 +410,13 @@ class ClubDataPreprocessor(DataPreprocessor):
         name_countries = rows.loc[domestic].groupby('name')['country'].agg(['nunique', 'first'])
         only_country = name_countries.loc[name_countries['nunique'] == 1, 'first']
 
-        rows['team_country'] = rows['country'].where(domestic, rows['code'].map(code_country).fillna(rows['name'].map(only_country)))
+        # a bracket code without a learned country (the league of the country is not in the data: 'Valencia (Mdv)')
+        # is not replaced by the only country of the name (Spain), the team stays without a country
+        by_name = rows['name'].map(only_country).where(rows['code'].isna())
+        rows['team_country'] = rows['country'].where(domestic, rows['code'].map(code_country).fillna(by_name))
 
         is_sure = domestic | rows['code'].map(code_country).notna()
+        rows['is_sure_country'] = is_sure
         has_country = rows['team_country'].notna()
 
         for keys in (['name', 'team_country', 'season'], ['name', 'team_country']):
@@ -687,7 +466,7 @@ class ClubDataPreprocessor(DataPreprocessor):
                  .agg(last_date=('date', 'max'), n_matches=('date', 'size'))
                  .assign(name=most_common(domestic, 'name').combine_first(most_common(rows, 'name')),
                          country=most_common(domestic, 'country')
-                         .combine_first(most_common(rows.dropna(subset=['team_country']), 'team_country'))))
+                         .combine_first(most_common(rows.loc[rows['is_sure_country']], 'team_country'))))
 
         teams['is_regular'] = teams['n_matches'] >= min_owner_matches
         teams = teams.sort_values(['name', 'is_regular', 'last_date'], ascending=[True, False, False])
@@ -1175,7 +954,7 @@ class ClubDataPreprocessor(DataPreprocessor):
         The last season is considered unfinished by default, so its last match is not a final.
         Extra time actually played is not used: it gives the 90' draw (target leakage).
 
-        Must be called after _notes_parser, _handle_visit_stadium, columns renaming (date, season) and _tag_playoffs.
+        Must be called after _handle_visit_stadium, columns renaming (date, season) and _tag_playoffs.
         """
         is_extra_time_played = matches['note'].isin(['AET', 'Pen'])
         has_stage, is_knockout_stage = self._knockout_stage(matches)
@@ -1468,7 +1247,7 @@ class NationalDataPreprocessor(DataPreprocessor):
         super().__init__()
         self.matches_columns = ['country', 'tournament', 'season', 'full_date', 'home_team', 'away_team', 'home_suffix',
                                 'away_suffix', 'home_score', 'away_score', 'date_raw', 'long_note', 'start_season_year', 'note', 'tournament_type',
-                                'is_with_full_date', 'season_id'] + self.new_format_columns
+                                'is_with_full_date', 'season_id'] + self.new_format_columns + self.notes_columns
 
         # final tournaments are neutral by default
         # host gets home advantage only when host team plays
@@ -1507,15 +1286,6 @@ class NationalDataPreprocessor(DataPreprocessor):
                    .drop_duplicates(duplicate_cols, keep='first')
                    .drop(columns='is_world_row')
                    .reset_index(drop=True))
-
-        matches = self._drop_forfeiting_wins(matches)
-
-        matches = self._notes_parser(matches)
-
-        matches['home_team'] = matches['home_team'].map(lambda t: t.strip())
-        matches['away_team'] = matches['away_team'].map(lambda t: t.strip())
-
-        matches = self._fix_scores(matches)
 
         matches = self._handle_visit_stadium(matches)
 
