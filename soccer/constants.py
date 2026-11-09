@@ -290,3 +290,36 @@ CLUBS_NAMED_AS_COUNTRIES = {
     'Liberia': 'Liberia Costa Rica',
     'Andorra': 'Andorra Spain',
 }
+
+
+# first leagues and second leagues that moved to another calendar (autumn/spring to spring/autumn):
+# (country, tournament type, the last season before the transfer); the teams of that season are known in the next one
+TRANSFER_SEASONS = [
+    ('Argentina', 'first_league', 2019),
+    ('Aruba', 'first_league', 2019),
+    ('Bangladesh', 'first_league', 2014),
+    ('Bangladesh', 'first_league', 2017),
+    ('Barbados', 'first_league', 2018),
+    ('Bolivia', 'first_league', 2016),
+    ('Cameroon', 'first_league', 2010),
+    ('Croatia', 'second_league', 2002),
+    ('Cyprus', 'second_league', 2012),
+    ('Gabon', 'first_league', 2013),
+    ('Gabon', 'first_league', 2017),
+    ('Ghana', 'first_league', 2015),
+    ('Indonesia', 'first_league', 2011),
+    ('Iraq', 'first_league', 2002),
+    ('Jordan', 'first_league', 2018),
+    ('Macao', 'first_league', 2007),
+    ('Malaysia', 'first_league', 2007),
+    ('Mali', 'first_league', 2014),
+    ('Mali', 'first_league', 2017),
+    ('Mauritania', 'first_league', 2007),
+    ('Somalia', 'first_league', 2016),
+    ('Somalia', 'first_league', 2020),
+    ('Sudan', 'first_league', 2022),
+    ('Thailand', 'first_league', 2004),
+    ('Togo', 'first_league', 2012),
+    ('Vietnam', 'first_league', 2001),
+    ('Zimbabwe', 'first_league', 2021),
+]
