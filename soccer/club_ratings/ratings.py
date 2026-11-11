@@ -125,12 +125,9 @@ class Ratings(SoccerGlicko):
         # one fixed value for all leagues, not fitted
         self.ms_new_team_update_mu = 90
 
-        # a league is comparable in the league table if its country has at least min_country_international_matches
-        # matches against foreign clubs over the last connectivity_seasons seasons, the league itself has matches
-        # against other leagues (cups, international) and its last match is not older than max_days_since_last_match
+        # a league is comparable in the league table if over the last connectivity_seasons seasons it is linked to the other
+        # leagues: by matches against them (cups, international) or by the transitions of teams between the divisions
         self.connectivity_seasons = 3
-        self.min_country_international_matches = 10
-        self.max_days_since_last_match = 365
 
         # (league, season) -> anchor, computed once per run (reset in _rating_initialization)
         self._anchor_cache = dict()
@@ -989,41 +986,42 @@ class Ratings(SoccerGlicko):
 
     def league_connectivity(self, matches: pd.DataFrame) -> pd.DataFrame:
         """Connectivity of every league to the global rating graph over the last connectivity_seasons seasons:
-            n_international_country: matches of the clubs of the country against foreign clubs
+            n_international: matches of the clubs of the league against foreign clubs
             n_cross_league: matches of the league against other leagues (domestic cups included)
-            days_since_last_match: days from the last match of the league to the end of the data
-            comparable: the level of the league is identified by the data (see __init__)
+            n_transitions: teams that came to the league from the other division of the country (promotion, relegation)
+            comparable: the level of the league is identified by the data, it is linked to the other leagues
         The level of an isolated league is set only by its init_mu, so its place in the table is not comparable."""
 
         home = matches.loc[matches['is_home'] == True]
 
-        rows_all = pd.concat([
-            home[['match_id', 'date', 'season', 'home_team_league', 'away_team_league']]
+        rows = pd.concat([
+            home[['match_id', 'season', 'home_team_league', 'away_team_league']]
             .rename(columns={'home_team_league': 'league', 'away_team_league': 'opp_league'}),
-            home[['match_id', 'date', 'season', 'away_team_league', 'home_team_league']]
+            home[['match_id', 'season', 'away_team_league', 'home_team_league']]
             .rename(columns={'away_team_league': 'league', 'home_team_league': 'opp_league'}),
         ])
-        rows_all['country'] = rows_all['league'].map(self._country)
-        rows_all['opp_country'] = rows_all['opp_league'].map(self._country)
 
-        last_date = rows_all.groupby('league')['date'].max()
-
-        min_season = sorted(rows_all['season'].unique())[-self.connectivity_seasons]
-        rows = rows_all.loc[rows_all['season'] >= min_season]
+        seasons = sorted(rows['season'].unique())[-self.connectivity_seasons:]
+        rows = rows.loc[rows['season'].isin(seasons)]
 
         cross = rows.loc[rows['league'] != rows['opp_league']]
-        foreign = rows.loc[rows['country'] != rows['opp_country']]
+        foreign = cross.loc[cross['league'].map(self._country) != cross['opp_league'].map(self._country)]
 
-        country_international = foreign.groupby('country')['match_id'].nunique()
+        # a team in the league in a season and in the other division of the same country in the previous season
+        transitions = []
+        for season in seasons:
+            previous_team_leagues = self.season_team_leagues.get(season - 1, dict())
+            for team, league in self.season_team_leagues.get(season, dict()).items():
+                previous_league = previous_team_leagues.get(team)
+                if previous_league is not None and previous_league != league and self._country(previous_league) == self._country(league):
+                    transitions.append(league)
 
-        df = pd.DataFrame(index=last_date.index)
-        df['n_international_country'] = df.index.map(lambda league: country_international.get(self._country(league), 0))
+        df = pd.DataFrame(index=pd.Index(sorted(set(matches['home_team_league']) | set(matches['away_team_league'])), name='league'))
+        df['n_international'] = foreign.groupby('league')['match_id'].nunique().reindex(df.index).fillna(0).astype(int)
         df['n_cross_league'] = cross.groupby('league')['match_id'].nunique().reindex(df.index).fillna(0).astype(int)
-        df['days_since_last_match'] = (matches['date'].max() - last_date).dt.days
+        df['n_transitions'] = pd.Series(transitions, dtype=object).value_counts().reindex(df.index).fillna(0).astype(int)
 
-        df['comparable'] = ((df['n_international_country'] >= self.min_country_international_matches)
-                            & (df['n_cross_league'] > 0)
-                            & (df['days_since_last_match'] <= self.max_days_since_last_match))
+        df['comparable'] = (df['n_cross_league'] > 0) | (df['n_transitions'] > 0)
 
         return df
 
@@ -1231,8 +1229,7 @@ class Ratings(SoccerGlicko):
 
         not_comparable = leagues_ratings.loc[leagues_ratings['comparable'] != True]
         print(f'\nLeagues with a level not identified by the data: {len(not_comparable)}')
-        print(not_comparable[['#', 'league', 'league_score', 'n_international_country', 'n_cross_league',
-                              'days_since_last_match']].to_string(index=False))
+        print(not_comparable[['#', 'league', 'league_score', 'n_international', 'n_cross_league', 'n_transitions']].to_string(index=False))
 
 
 if __name__ == '__main__':

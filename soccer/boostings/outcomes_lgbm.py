@@ -29,16 +29,20 @@ class OutcomesLGBM(LightGBM):
                          metric='poisson',
                          cv_metric='valid poisson-mean',
                          n_estimators=10_000,
-                         learning_rate=0.006245,
-                         num_leaves=146,
-                         feature_fraction=0.321628,
-                         lambda_l1=2.252103,
-                         lambda_l2=1.793498,
-                         bagging_fraction=0.679845,
-                         bagging_freq=5,
-                         min_data_in_leaf=43,
+                         # optuna 'night' (10.11), trial 42: CV poisson 0.869593 with 8,393 trees,
+                         # the previous params (learning_rate 0.006, 146 leaves): 0.869820 with 8,020 trees
+                         learning_rate=0.014855,
+                         num_leaves=43,
+                         feature_fraction=0.273134,
+                         lambda_l1=4.145553,
+                         lambda_l2=2.550531,
+                         bagging_fraction=0.813335,
+                         bagging_freq=2,
+                         min_data_in_leaf=42,
+                         # 63 bins instead of 255: faster histograms, the features are means over a few matches
+                         max_bin=63,
                          early_stopping_round=100,
-                         cv=5)
+                         cv=3)
 
         self.features = [
 
@@ -98,18 +102,15 @@ class OutcomesLGBM(LightGBM):
                        .drop(columns=['datetime_start', 'datetime_complete', 'state'])
                        .sort_values(['value'], ascending=True))
 
-        experiments.columns = [col.replace('params_', '') for col in experiments.columns]
+        experiments.columns = [col.replace('params_', '').replace('user_attrs_', '') for col in experiments.columns]
 
         save_feather(experiments, config.soccer['outcomes']['experiments']['lgbm'] + study_name + '.feather')
 
         return experiments
 
-    def optuna_optimization(self, n_trials: int, study_name: str) -> pd.DataFrame:
-        """Hyperparameters by the CV on train + eval. The folds are split by match_id:
+    def _cv_dataset(self) -> tuple[lgb.Dataset, list]:
+        """The dataset and the folds of the CV on train + eval. The folds are split by match_id:
         the home and the away rows of a match mirror each other, they must be in the same fold."""
-
-        study = optuna.create_study(study_name=study_name, direction="minimize",
-                                    sampler=optuna.samplers.TPESampler(seed=self.seed))
 
         train_set = pd.read_feather(self.train_set_path, columns=self.columns + ['match_id'])
         eval_set = pd.read_feather(self.eval_set_path, columns=self.columns + ['match_id'])
@@ -122,10 +123,42 @@ class OutcomesLGBM(LightGBM):
         # 120' score for extra time matches: offset makes the model learn regular time (90') goals
         init_score = self._init_score(combined)
 
-        cv_dataset = lgb.Dataset(x, y, init_score=init_score, categorical_feature=self.cat_features, free_raw_data=False)
+        # feature_pre_filter=False: the bins are built once for all trials, min_data_in_leaf changes between them
+        cv_dataset = lgb.Dataset(x, y, init_score=init_score, categorical_feature=self.cat_features, free_raw_data=False,
+                                 params={'feature_pre_filter': False, 'max_bin': self.max_bin})
 
         del train_set, eval_set, combined, x, y, init_score
         gc.collect()
+
+        return cv_dataset, folds
+
+    def cv_score(self) -> tuple[float, int]:
+        """The CV loss and the number of trees of the parameters of the model (__init__), on the same folds as optuna_optimization:
+        the reference point for the trials."""
+
+        cv_dataset, folds = self._cv_dataset()
+
+        params = {**self.params(), 'verbose': -1}
+        params.pop('early_stopping_round')
+
+        cv_results = lgb.cv(params=params,
+                            train_set=cv_dataset,
+                            folds=folds,
+                            callbacks=[lgb.log_evaluation(period=500), lgb.early_stopping(stopping_rounds=self.early_stopping_round)],
+                            seed=self.seed)
+
+        n_trees = len(cv_results[self.cv_metric])
+        print(f'CV {self.cv_metric}: {cv_results[self.cv_metric][-1]:.6f}, trees: {n_trees}, trees x leaves: {n_trees * self.num_leaves}')
+
+        return cv_results[self.cv_metric][-1], n_trees
+
+    def optuna_optimization(self, n_trials: int, study_name: str) -> pd.DataFrame:
+        """Hyperparameters by the CV on train + eval (see _cv_dataset)."""
+
+        study = optuna.create_study(study_name=study_name, direction="minimize",
+                                    sampler=optuna.samplers.TPESampler(seed=self.seed))
+
+        cv_dataset, folds = self._cv_dataset()
 
         def objective(trial):
             params = {
@@ -135,23 +168,30 @@ class OutcomesLGBM(LightGBM):
                 'verbose': -1,
                 'seed': self.seed,
 
-                'learning_rate': trial.suggest_float('learning_rate', 0.001, 0.02),
-                'feature_fraction': trial.suggest_float('feature_fraction', 0.3, 0.9),
-                'num_leaves': trial.suggest_int('num_leaves', 64, 200),
+                'learning_rate': trial.suggest_float('learning_rate', 0.012, 0.1, log=True),
+                'feature_fraction': trial.suggest_float('feature_fraction', 0.15, 0.7),
+                'num_leaves': trial.suggest_int('num_leaves', 15, 150),
                 'lambda_l1': trial.suggest_float('lambda_l1', 1.0, 5.0, log=True),
                 'lambda_l2': trial.suggest_float('lambda_l2', 1.0, 5.0, log=True),
                 'bagging_fraction': trial.suggest_float('bagging_fraction', 0.4, 0.9),
                 'bagging_freq': trial.suggest_int('bagging_freq', 1, 10),
                 'min_data_in_leaf': trial.suggest_int('min_data_in_leaf', 25, 80),
-                'max_bin': 255,
+                'max_bin': self.max_bin,
                 'device_type': 'cpu'
             }
 
-            return lgb.cv(params=params,
-                          train_set=cv_dataset,
-                          folds=folds,
-                          callbacks=[lgb.log_evaluation(period=500), lgb.early_stopping(stopping_rounds=self.early_stopping_round)],
-                          seed=self.seed)[self.cv_metric][-1]
+            cv_results = lgb.cv(params=params,
+                                train_set=cv_dataset,
+                                folds=folds,
+                                callbacks=[lgb.log_evaluation(period=500), lgb.early_stopping(stopping_rounds=self.early_stopping_round)],
+                                seed=self.seed)
+
+            # the cost of the prediction: trees x leaves, to choose a lighter model with almost the same loss
+            n_trees = len(cv_results[self.cv_metric])
+            trial.set_user_attr('n_trees', n_trees)
+            trial.set_user_attr('prediction_cost', n_trees * params['num_leaves'])
+
+            return cv_results[self.cv_metric][-1]
 
         study.optimize(objective,
                        n_trials=n_trials,

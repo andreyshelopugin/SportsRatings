@@ -859,6 +859,39 @@ class ClubDataPreprocessor(DataPreprocessor):
         return matches
 
     @staticmethod
+    def _exclude_isolated_leagues(matches: pd.DataFrame) -> pd.DataFrame:
+        """Leagues not linked to the other leagues in any season: their teams never played in another league
+        (promotion, relegation), against a team of another league (cups) or against foreign clubs.
+        The level of such a league is set only by its initial rating (the second league of Singapore, 2025)."""
+
+        is_league = matches['tournament_type'].isin({'first_league', 'second_league'})
+        league = matches['country'] + ' ' + matches['tournament_type']
+
+        team_leagues = pd.concat([pd.DataFrame({'team': matches.loc[is_league, column], 'league': league[is_league]})
+                                  for column in ['home_team', 'away_team']]).drop_duplicates()
+        leagues_of_team = team_leagues.groupby('team')['league'].agg(frozenset)
+
+        home_leagues = matches['home_team'].map(leagues_of_team)
+        away_leagues = matches['away_team'].map(leagues_of_team)
+
+        # a foreign opponent or an opponent from another league (cups) links the leagues of the teams
+        is_linking = (matches['is_domestic'] == False) | (home_leagues != away_leagues)
+        linking_teams = set(matches.loc[is_linking, 'home_team']) | set(matches.loc[is_linking, 'away_team'])
+
+        # promotion, relegation: the team played in two leagues
+        linking_teams |= set(leagues_of_team.index[leagues_of_team.map(len) > 1])
+
+        linked_leagues = set(team_leagues.loc[team_leagues['team'].isin(linking_teams), 'league'])
+        isolated_leagues = set(team_leagues['league']) - linked_leagues
+        print(f'isolated leagues: {isolated_leagues}')
+
+        # the teams of an isolated league play only each other
+        is_isolated = home_leagues.map(lambda leagues: isinstance(leagues, frozenset) and leagues <= isolated_leagues)
+        print(f'#dropped matches of the isolated leagues: {is_isolated.sum()}')
+
+        return matches.loc[~is_isolated].reset_index(drop=True)
+
+    @staticmethod
     def _tournament_preprocessing(matches: pd.DataFrame) -> pd.DataFrame:
         """Rename tournaments to a unified format: country + league/cup type"""
 
@@ -953,6 +986,7 @@ class ClubDataPreprocessor(DataPreprocessor):
         matches = self._neutral_venue_by_city(matches)
 
         matches = self._exclude_leagues_without_international_history(matches)
+        matches = self._exclude_isolated_leagues(matches)
         matches = self._tournament_preprocessing(matches)
         matches = self._add_team_leagues(matches)
 

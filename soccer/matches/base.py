@@ -9,7 +9,9 @@ class DataPreprocessor(object):
         # columns of the new Flashscore format (match pages), empty for old rows
         self.new_format_columns = ['flashscore_id', 'round', 'tournament_stage', 'home_penalty', 'away_penalty',
                                    'home_team_id', 'away_team_id', 'venue', 'venue_city', 'capacity', 'attendance',
-                                   'referee', 'referee_country']
+                                   'referee', 'referee_country',
+                                   # regular time (90') and extra time goals of the AET / Pen matches, from the match pages
+                                   'home_score_90', 'away_score_90', 'home_score_et', 'away_score_et']
 
         # columns of the notes of Flashscore, parsed in the Flashscore project (MatchNotes)
         self.notes_columns = ['original_long_note', 'is_on_visit_stadium', 'is_no_spectators', 'is_different_stadium',
@@ -86,6 +88,7 @@ class DataPreprocessor(object):
         aggregate_away = matches['aggregate_away'].copy()
         first_leg_home = matches['first_leg_home'].copy()
         first_leg_away = matches['first_leg_away'].copy()
+        periods = {column: matches[column].copy() for column in ['home_score_90', 'away_score_90', 'home_score_et', 'away_score_et']}
 
         matches['home_team'] = np.where(is_on_visit_stadium, away_team, home_team)
         matches['away_team'] = np.where(is_on_visit_stadium, home_team, away_team)
@@ -103,6 +106,10 @@ class DataPreprocessor(object):
         # "1st leg result" is written in the current match orientation, so it is swapped as well
         matches['first_leg_home'] = first_leg_home.where(~is_on_visit_stadium, first_leg_away)
         matches['first_leg_away'] = first_leg_away.where(~is_on_visit_stadium, first_leg_home)
+
+        for period in ['90', 'et']:
+            matches[f'home_score_{period}'] = periods[f'home_score_{period}'].where(~is_on_visit_stadium, periods[f'away_score_{period}'])
+            matches[f'away_score_{period}'] = periods[f'away_score_{period}'].where(~is_on_visit_stadium, periods[f'home_score_{period}'])
 
         matches = matches.drop(columns='is_on_visit_stadium')
 
@@ -170,7 +177,7 @@ class DataPreprocessor(object):
         """Five-outcome labels for matches where extra time is possible.
 
         'H' / 'A'                              — win in regular time (90')
-        'D'                                    — draw in regular time, no extra time played
+        'D'                                    — draw in regular time, no extra time played (also penalties right after 90')
         'HOME_EXTRA_TIME' / 'AWAY_EXTRA_TIME'  — win in extra time (note == 'AET')
         'DRAW_EXTRA_TIME'                      — draw after extra time → penalties (note == 'Pen')
 
@@ -184,7 +191,15 @@ class DataPreprocessor(object):
         Must be called after _extra_time_possibility.
         """
         is_after_extra_time = matches['note'] == 'AET'
-        is_penalties = matches['note'] == 'Pen'
+
+        # penalties right after the regular time (no extra time in the competition): the 90' score is known, the extra time score is not.
+        # Without the periods on the match page the penalties are after extra time, as in most competitions
+        is_penalties_after_regular_time = ((matches['note'] == 'Pen')
+                                           & matches['home_score_90'].notna()
+                                           & matches['home_score_et'].isna()).fillna(False).astype(bool)
+        is_penalties = (matches['note'] == 'Pen') & ~is_penalties_after_regular_time
+        print('#penalties right after the regular time:', is_penalties_after_regular_time.sum())
+
         is_regular_time = ~is_after_extra_time & ~is_penalties
 
         # tie winner for extra time: aggregate first (second legs), then match score

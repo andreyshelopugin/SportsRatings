@@ -24,7 +24,7 @@ class DixonColes(MatrixModels):
     dc_param: the correlation parameter rho, fitted by fit (W/D/L loss on the eval set of the lgbm).
     """
 
-    def __init__(self, dc_param=-0.051):
+    def __init__(self, dc_param=-0.06):
         super().__init__()
         self.dc_param = dc_param
 
@@ -61,7 +61,8 @@ class DixonColes(MatrixModels):
         best_loss = np.inf
         best_param = None
 
-        dc_params = np.linspace(-0.06, -0.02, 41)
+        # -0.06 was the boundary of the previous grid and the estimate with the new lgbm (10.11)
+        dc_params = np.linspace(-0.12, -0.02, 101)
         for i, dc_param in enumerate(dc_params):
             self.dc_param = dc_param
 

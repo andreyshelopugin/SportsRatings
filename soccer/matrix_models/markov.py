@@ -12,17 +12,17 @@ class Markov(MatrixModels):
         super().__init__()
         self.big_score_matrix_size = self.score_matrix_size * self.score_matrix_size
 
-        # fitted on the W/D/L loss on the eval set of the lgbm (fit), the loss is flat: not fully converged
-        self.low_scoring_00 = 0.03
-        self.low_scoring_10_01 = 0.095
-        self.low_scoring_11 = 0.045
+        # fitted on the W/D/L loss on the eval set of the lgbm (fit, 10.11), the loss is flat: not fully converged
+        self.low_scoring_00 = 0.025
+        self.low_scoring_10_01 = 0.085
+        self.low_scoring_11 = 0.04
 
-        self.three_goals_lead_param = 1.18
-        self.two_goals_lead_param = 0.92
-        self.one_goal_lead_param = 0.825
-        self.one_goals_trail_param = 1.21
-        self.two_goals_trail_param = 0.98
-        self.three_goals_trail_param = 0.905
+        self.three_goals_lead_param = 1.23
+        self.two_goals_lead_param = 0.96
+        self.one_goal_lead_param = 0.80
+        self.one_goals_trail_param = 1.205
+        self.two_goals_trail_param = 0.93
+        self.three_goals_trail_param = 0.855
 
         # the expected goals of the chain are rescaled to the ones of the lgbm (score_matrix_model)
         self.mean_matching_iterations = 3

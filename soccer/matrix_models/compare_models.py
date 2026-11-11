@@ -27,8 +27,10 @@ def probabilities(model, matches: pd.DataFrame, desc: str) -> np.ndarray:
 def main():
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # the fitted params are the defaults of DixonColes and Markov, the refit: dixon_coles.fit(), markov.fit()
+    # rho of DixonColes is refitted on the held-out part of the train seasons (a grid search, minutes),
+    # the params of Markov are the defaults of the class: their fit (Markov.fit) takes ~1.5 hours
     dixon_coles = DixonColes()
+    dixon_coles.fit()
     markov = Markov()
 
     _, test_matches = MatrixModels().get_data()

@@ -24,7 +24,7 @@ class NationalPreprocessing(object):
         self.goals_expectations_clip_quantile = 0.999
 
         # extra time goals relative to regular time, the same value as Features.extra_time_goals_ratio
-        self.extra_time_goals_ratio = 0.25
+        self.extra_time_goals_ratio = 0.38
 
         self.input_goals_expectations_columns = ['match_id', 'home_goals_expectations', 'away_goals_expectations']
 

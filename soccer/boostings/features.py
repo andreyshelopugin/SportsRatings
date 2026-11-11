@@ -17,8 +17,9 @@ class Features(object):
 
         self.windows = [(5, 3), (10, 5), (20, 10), (30, 20)]
 
-        # goals of the extra time relative to the regular time (30 of 90 minutes, without a fit)
-        self.extra_time_goals_ratio = 0.25
+        # goals of the extra time relative to a regular time (90'): 1.02 against 2.69 goals per match,
+        # 12,898 extra time matches with the periods on the match page (09.11)
+        self.extra_time_goals_ratio = 0.38
 
         # union of club and national team matches (MatchesPreprocessor), match_id is common for the whole project
         self.input_columns = ['match_id', 'source', 'date', 'home_team', 'away_team', 'home_score', 'away_score',
@@ -26,7 +27,8 @@ class Features(object):
                               'is_championship', 'is_neutral',
                               'is_no_spectators', 'is_different_stadium', 'is_limited_spectators', 'is_pandemic',
                               'home_indicator', 'is_final_stage',
-                              'is_extra_time_possible', 'is_extra_time', 'outcome_regular_time']
+                              'is_extra_time_possible', 'is_extra_time', 'outcome_regular_time',
+                              'home_score_90', 'away_score_90']
 
         # is_extra_time, exposure and outcome_regular_time are not features (leakage):
         # exposure is used as offset, outcome_regular_time for outcome metrics
@@ -260,12 +262,14 @@ class Features(object):
         """From a row per match (home, away) to a row per team and match (team, opponent)."""
 
         home_scoring = (matches
-                        .loc[:, ['date', 'home_team', 'away_team', 'home_score', 'away_score', 'match_id', 'tournament_type', 'season']]
-                        .rename(columns={'home_team': 'team', 'away_team': 'opp_team', 'home_score': 'score', 'away_score': 'opp_score'}))
+                        .loc[:, ['date', 'home_team', 'away_team', 'home_score', 'away_score', 'home_score_90', 'away_score_90', 'match_id', 'tournament_type', 'season']]
+                        .rename(columns={'home_team': 'team', 'away_team': 'opp_team', 'home_score': 'score', 'away_score': 'opp_score',
+                                         'home_score_90': 'score_90', 'away_score_90': 'opp_score_90'}))
 
         away_scoring = (matches
-                        .loc[:, ['date', 'away_team', 'home_team', 'away_score', 'home_score', 'match_id', 'tournament_type', 'season']]
-                        .rename(columns={'away_team': 'team', 'home_team': 'opp_team', 'away_score': 'score', 'home_score': 'opp_score'}))
+                        .loc[:, ['date', 'away_team', 'home_team', 'away_score', 'home_score', 'away_score_90', 'home_score_90', 'match_id', 'tournament_type', 'season']]
+                        .rename(columns={'away_team': 'team', 'home_team': 'opp_team', 'away_score': 'score', 'home_score': 'opp_score',
+                                         'away_score_90': 'score_90', 'home_score_90': 'opp_score_90'}))
 
         home_scoring['is_home'] = True
         away_scoring['is_home'] = False
@@ -340,8 +344,15 @@ class Features(object):
 
     def _postprocessing(self, scoring: pd.DataFrame) -> pd.DataFrame:
         """Exposure, the output columns and their types."""
-        # 120' score for extra time matches (AET and Pen): regular time equivalent duration
-        scoring['exposure'] = np.where(scoring['is_extra_time'] == True, 1 + self.extra_time_goals_ratio, 1.0)
+        # the target of extra time matches: the 90' score if it is known (the rolling features above use the final score),
+        # otherwise the 120' score with the exposure of the extra time
+        is_extra_time = scoring['is_extra_time'] == True
+        is_known_regular_time = is_extra_time & scoring['score_90'].notna()
+
+        scoring['score'] = scoring['score'].where(~is_known_regular_time, scoring['score_90']).astype('int64')
+        scoring['opp_score'] = scoring['opp_score'].where(~is_known_regular_time, scoring['opp_score_90']).astype('int64')
+        scoring['exposure'] = np.where(is_extra_time & ~is_known_regular_time, 1 + self.extra_time_goals_ratio, 1.0)
+        print(f'#extra time rows: {is_extra_time.sum()}, the 90\' target: {is_known_regular_time.sum()}')
 
         scoring = scoring.loc[:, self.output_columns]
 

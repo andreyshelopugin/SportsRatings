@@ -20,7 +20,7 @@ class ClubPreprocessing(object):
         self.goals_expectations_clip_quantile = 0.999
 
         # extra time goals relative to regular time, the same value as Features.extra_time_goals_ratio
-        self.extra_time_goals_ratio = 0.25
+        self.extra_time_goals_ratio = 0.38
 
         # short seasons (see _exclude_short_seasons): excluded from championships if the median matches per team <= 2,
         # printed if < 0.5 of the typical median of the tournament; the seasons of the last 60 days are current
