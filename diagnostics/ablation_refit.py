@@ -18,8 +18,8 @@ ROOT = Path(__file__).resolve().parent.parent
 os.chdir(ROOT)
 
 from config import config
-from full_pipeline import SHARED_SHIFTS
 from soccer.club_ratings.evaluate_glicko import EvaluateGlicko
+from soccer.club_ratings.train_glicko import SHARED_SHIFTS
 from utils.functions import stage
 from utils.metrics import three_outcomes_log_loss
 

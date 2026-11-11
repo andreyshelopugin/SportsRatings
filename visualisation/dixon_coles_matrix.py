@@ -39,7 +39,7 @@ def plot_score_probability_matrix(
         show_sums: bool = False,
 ):
     """font_scale multiplies all font sizes, title=None for a figure in a paper (the caption is in the text),
-    show_sums adds the sums of the regions (p_H, p_D, p_A) to their labels (28.10)."""
+    show_sums adds the sums of the regions (p_H, p_D, p_A) to their labels."""
 
     if theme not in COLOR_THEMES:
         raise ValueError(

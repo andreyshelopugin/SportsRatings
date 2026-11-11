@@ -122,7 +122,7 @@ class NationalDataPreprocessor(DataPreprocessor):
             print(f'no final stage dates for {tournament} {season}, fallback window is used')
             return season_max - pd.Timedelta(days=self.final_stage_window_days), season_max
 
-        # the dates of the entries are days, the match dates are UTC times (28.10): the end day is included
+        # the dates of the entries are days, the match dates are UTC times: the end day is included
         # (the final of the World Cup 2010 at 19:30 was after '2010-07-11 00:00'), an evening match in the Americas
         # can be the day before the start in UTC (Gold Cup 2003: 2003-07-11 23:00 for '2003-07-12')
         margin = pd.Timedelta(days=1)

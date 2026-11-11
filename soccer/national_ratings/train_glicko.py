@@ -1,6 +1,4 @@
 import gc
-import shutil
-from pathlib import Path
 from math import sqrt
 
 import numpy as np
@@ -8,7 +6,7 @@ import pandas as pd
 
 from config import config
 from soccer.national_ratings.ratings import NationalRatings
-from utils.functions import save_pickle, load_pickle
+from utils.functions import save_pickle
 
 
 class TrainNationalGlicko(NationalRatings):
@@ -59,7 +57,7 @@ class TrainNationalGlicko(NationalRatings):
                             # logistic of the host at a final stage: the guests arrive in advance (acclimatization,
                             # no travel before the match), so the effect is not larger than in qualifiers
                             'beta': lambda x: 0 <= x <= 1,
-                            # the share of the usual home advantage of the host of a final stage (28.10)
+                            # the share of the usual home advantage of the host of a final stage
                             'gamma': lambda x: x >= 0}
 
         # country level: culture-dependent params, L2 shrinkage to the confederation level
@@ -88,7 +86,7 @@ class TrainNationalGlicko(NationalRatings):
         self.loss_filter = None
 
         # fit init_mu of the confederations (the start levels). False: all teams start from the same init_mu,
-        # the levels of the confederations come only from the matches (28.10)
+        # the levels of the confederations come only from the matches
         self.fit_confederation_levels = True
 
     def _loss_weight(self, info) -> float:
@@ -261,13 +259,9 @@ class TrainNationalGlicko(NationalRatings):
             return round(min(step * 2, self.max_step_factor * delta), self.round_digits)
         return round(max(step / 2, delta / self.min_step_divisor), self.round_digits)
 
-    def fit_global_params(self, number_iterations: int, fit_final_stage=False, fit_alpha=False):
+    def fit_global_params(self, number_iterations: int, fit_final_stage=False):
         """Coordinate descent over the global params, init_mu of confederations and rd_growth
-        (and host / beta if fit_final_stage, alpha if fit_alpha). Country params are fixed.
-
-        alpha is identified only by final stages without host: alpha * (crowd_h - crowd_a) is 0 while crowd is global,
-        so with fit_alpha=False alpha is fixed to 1 and host keeps the product alpha * host (the host crowd factor).
-        Fit alpha after fit_country_params (country crowd): the support intensity of home matches transfers to a neutral venue.
+        (and gamma of the final stages if fit_final_stage). Country params are fixed.
 
         A shift of all init_mu changes the loss only through strength_overall != 1 and strength != 0,
         normalize_params compensates it, the level is set by normalize_params."""
@@ -276,24 +270,11 @@ class TrainNationalGlicko(NationalRatings):
 
         state, country_params = self._initial_state()
 
-        # alpha, host, beta replaced by gamma (28.10), fit_alpha is not used
-        # # alpha fixed to 1 (fit_alpha=False) or outside its constraint (e.g. fitted before the constraint):
-        # # alpha = 1, host keeps the product alpha * host (the host crowd factor)
-        # if fit_final_stage and (not fit_alpha or not self.constraints['alpha'](state['final_stage.alpha'])):
-        #     state['final_stage.host'] = round(state['final_stage.alpha'] * state['final_stage.host'], self.round_digits)
-        #     state['final_stage.alpha'] = 1.
-        #     self._save_state(state)
-        #
-        # if fit_final_stage and not self.constraints['beta'](state['final_stage.beta']):
-        #     state['final_stage.beta'] = min(max(state['final_stage.beta'], 0.), 1.)
-        #     self._save_state(state)
-
         keys = ([f'global.{name}' for name in self.global_fit_params]
                 + (sorted(key for key in state if key.startswith('confederation.')) if self.fit_confederation_levels else [])
                 + ['rd_growth'])
 
         if fit_final_stage:
-            # keys += ['final_stage.host', 'final_stage.beta'] + (['final_stage.alpha'] if fit_alpha else [])
             keys += ['final_stage.gamma']
 
         current_loss = self._state_loss(state, country_params)
@@ -544,49 +525,3 @@ class TrainNationalGlicko(NationalRatings):
         print(report.to_string())
 
         return report
-
-
-def _backup(paths: dict, suffix: str) -> dict:
-    """Copy the params pickles to <name>_<suffix>.pkl, returns {path: backup path}."""
-    backups = dict()
-    for path in paths.values():
-        path = Path(path)
-        if path.exists():
-            backup = path.with_name(f'{path.stem}_{suffix}{path.suffix}')
-            shutil.copy(path, backup)
-            backups[path] = backup
-    return backups
-
-
-def _restore(backups: dict):
-    for path, backup in backups.items():
-        shutil.copy(backup, path)
-
-
-if __name__ == '__main__':
-    train = TrainNationalGlicko()
-    paths = config.soccer['national_params']
-
-    # every variant starts from the same global params: fitted without countries (alpha = 1, not identified without them)
-    save_pickle(dict(), paths['country'])
-    train.fit_global_params(number_iterations=100, fit_final_stage=True)
-    baseline = _backup(paths, 'baseline')
-
-    print('\n=== no countries ===')
-    train.compare_losses()
-
-    for penalty in [1., 5., 20.]:
-        print(f'\n=== countries {train.country_fit_params}, penalty {penalty} ===')
-        _restore(baseline)
-        train = TrainNationalGlicko()
-        train.country_penalty = penalty
-
-        train.fit_country_params(number_iterations=20, reset=True)
-        train.fit_global_params(number_iterations=100, fit_final_stage=True, fit_alpha=True)
-        train.compare_losses()
-
-        _backup(paths, f'penalty_{int(penalty)}')
-
-    # the best variant: _restore to its backup (e.g. country_params_penalty_5.pkl -> country_params.pkl, ...),
-    # then train.normalize_params()
-    _restore(baseline)

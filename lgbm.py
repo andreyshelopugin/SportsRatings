@@ -339,7 +339,7 @@ class LightGBM(object):
             y_train, y_test = y.loc[train_index], y.loc[test_index]
             self.weights = weights.loc[train_index]
 
-            lgbm.fit(x, y,
+            lgbm.fit(x_train, y_train,
                      categorical_feature=self.cat_features,
                      eval_set=[(x_eval, y_eval)])
 
@@ -356,7 +356,7 @@ class LightGBM(object):
         train_set = pd.read_feather(self.train_set_path, columns=self.columns)
         eval_set = pd.read_feather(self.eval_set_path, columns=self.columns)
 
-        x_train, y_train = train_set.loc[:, self.features], train_set[self.target]
+        x, y = train_set.loc[:, self.features], train_set[self.target]
         x_eval, y_eval = eval_set.loc[:, self.features], eval_set[self.target]
 
         k_fold = KFold(n_splits=self.cv, shuffle=True, random_state=self.seed)
@@ -364,15 +364,16 @@ class LightGBM(object):
         lgbm = LGBMClassifier(**self.params())
 
         cv_scores = []
-        for train_index, test_index in k_fold.split(x_train):
-            x_train, x_test = x_train.loc[train_index], x_train.loc[test_index]
-            y_train, y_test = y_train.loc[train_index], y_train.loc[test_index]
+        for train_index, test_index in k_fold.split(x):
+            x_train, x_test = x.loc[train_index], x.loc[test_index]
+            y_train, y_test = y.loc[train_index], y.loc[test_index]
 
             lgbm.fit(x_train, y_train,
                      categorical_feature=self.cat_features,
                      eval_set=[(x_eval, y_eval)])
 
-            logits = lgbm.predict_proba(x_test)
+            # a custom objective: the model gives the raw scores (logits), the probabilities are below
+            logits = lgbm.predict(x_test, raw_score=True)
             y_star = np.where(logits >= 0,
                               1. / (1. + np.exp(-logits)),
                               np.exp(logits) / (1. + np.exp(logits)))

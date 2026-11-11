@@ -13,8 +13,8 @@ import warnings
 
 import pandas as pd
 
-from full_pipeline import SHARED_SHIFTS, LEAGUE_FIT_ITERATIONS
 from soccer.club_ratings.evaluate_glicko import EvaluateGlicko
+from soccer.club_ratings.train_glicko import LEAGUE_FIT_ITERATIONS, SHARED_SHIFTS
 from utils.functions import stage
 
 warnings.filterwarnings('ignore')

@@ -18,7 +18,7 @@ class Features(object):
         self.windows = [(5, 3), (10, 5), (20, 10), (30, 20)]
 
         # goals of the extra time relative to a regular time (90'): 1.02 against 2.69 goals per match,
-        # 12,898 extra time matches with the periods on the match page (09.11)
+        # 12,898 extra time matches with the periods on the match page
         self.extra_time_goals_ratio = 0.38
 
         # union of club and national team matches (MatchesPreprocessor), match_id is common for the whole project

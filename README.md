@@ -15,7 +15,7 @@ The current ratings are in the root of the repository:
 | File | Content |
 |---|---|
 | `club_ratings.csv` | clubs: rank, rating, league |
-| `league_ratings.csv` | leagues: the weighted mean of the top 8 clubs, top 5 / 7 / 10, the ratings of the places 1-10 |
+| `league_ratings.csv` | leagues: the weighted mean of the top 8 clubs, top 5 / 7 / 10, the ratings of the places 1-10; the links of the league to the other leagues in the last three seasons (matches against foreign clubs, against other leagues, promotions and relegations) and `comparable`: the level of the league is identified by the data |
 | `national_ratings.csv` | national teams: rating, rating deviation, confederation, the last match |
 
 ## Code
@@ -69,6 +69,7 @@ national = matches[matches['source'] == 'national']
 | `country`, `tournament`, `tournament_name`, `tournament_type` | competition |
 | `home_team`, `away_team` | team names, unique across countries and sources |
 | `home_score`, `away_score` | score after extra time if played; penalty shootouts are not included in the score |
+| `home_score_90`, `away_score_90`, `home_score_et`, `away_score_et` | matches decided after 90 minutes (`AET`, `Pen`): the score after 90 minutes and the goals of extra time, where the match page gives them |
 | `note` | `AET` (decided in extra time), `Pen` (decided on penalties) |
 | `leg`, `first_leg_home`, `first_leg_away`, `aggregate_home`, `aggregate_away` | two-legged ties |
 | `outcome` | `H` / `D` / `A` by the final score |
@@ -85,7 +86,9 @@ national = matches[matches['source'] == 'national']
 - a team is identified by its Flashscore team id: clubs with identical names are told apart (e.g. `River Plate Argentina`, `River Plate Uruguay`), renamed clubs are merged;
 - forfeits, walkovers, annulled and abandoned matches removed;
 - neutral venues, matches played at the visiting team's stadium and tournament hosts annotated;
-- promotion/relegation playoffs separated from regular league matches.
+- promotion/relegation playoffs separated from regular league matches;
+- a penalty shootout directly after 90 minutes (the score after 90 minutes is known, the score of extra time is not) is a draw of the regular time without extra time;
+- leagues without any link to the other leagues in any season (no promotion, no cup or international matches) removed.
 
 ### Known issues
 

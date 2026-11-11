@@ -1,11 +1,10 @@
-"""All tables of the paper from the fitted params (the fits: full_pipeline.py, evaluation_pipeline.py, national_pipeline.py).
+"""All tables of the paper from the fitted params (the fits: run.py, evaluation_pipeline.py, national_pipeline.py).
 Order of a full rebuild:
-    1. full_pipeline.rebuild_data           matches, features, lgbm, goals expectations, glicko matches
-    2. full_pipeline.production_fit         production params of the clubs (all seasons)
-    3. evaluation_pipeline.main             train fit of the clubs (< 2021) and the sequential test predictions
-    4. national_pipeline.train_fit, main    train fit and production params of the national teams
-    5. soccer/matrix_models/compare_models  Skellam, Dixon-Coles, Markov
-    6. paper.main                           the tables below
+    1. run.py (REFIT = True)                matches, features, lgbm, goals expectations, the production params and ratings
+    2. evaluation_pipeline.main             train fit of the clubs (< 2021) and the sequential test predictions
+    3. national_pipeline.train_fit          train fit of the national teams (the production params: run.py)
+    4. soccer/matrix_models/compare_models  Skellam, Dixon-Coles, Markov
+    5. paper.main                           the tables below
 Results: data/soccer/tables/.
 Run from the root of the project. ~10 hours (the ablations with a refit are the longest, they can be commented out)."""
 import shutil

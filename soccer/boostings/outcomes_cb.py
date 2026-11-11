@@ -47,7 +47,7 @@ class OutcomesCatBoost(CatBoost):
 
             'venue', 'is_pandemic', 'is_no_spectators', 'is_different_stadium', 'is_limited_spectators',
 
-            # the same features as in OutcomesLGBM (28.10)
+            # the same features as in OutcomesLGBM
             'is_extra_time_possible',
 
             'days_since_last_game', 'games_in_season', 'opp_days_since_last_game', 'opp_games_in_season',
@@ -266,7 +266,7 @@ class OutcomesCatBoost(CatBoost):
         print("=" * 80)
 
         # metrics comparison
-        print(f"\n  Classification Metrics:")
+        print("\n  Classification Metrics:")
         for m in ["accuracy", "custom_log_loss", "brier_score"]:
             delta = metrics[m] - baseline_metrics[m]
             sign = "+" if delta >= 0 else ""

@@ -1,4 +1,4 @@
-"""31.10: the diagrams of the rating pipeline for the appendix (clubs and national teams),
+"""The diagrams of the rating pipeline for the appendix (clubs and national teams),
 in the style of the old Fig1.jpg: yellow boxes, blue titles, black italic descriptions, red italic outputs."""
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
@@ -7,8 +7,6 @@ YELLOW = '#F7C613'
 BLUE = '#1a1aff'
 RED = '#d6004c'
 
-# 31.10: taller boxes, the two-line descriptions overlapped
-# 31.10 19:35: wider boxes
 BOX_W, BOX_H = 8.2, 1.75
 X0 = 0.9
 

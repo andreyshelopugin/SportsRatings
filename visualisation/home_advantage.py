@@ -4,7 +4,7 @@ import pandas as pd
 
 from config import config
 
-# 30.10: the figure of the paper (non-stationarity, the discount of the loss): home advantage by season,
+# the figure of the paper (non-stationarity, the discount of the loss): home advantage by season,
 # domestic league matches of the clubs, neutral venues excluded, 90 minutes outcome
 
 POINTS = {'H': (3, 0), 'D': (1, 1), 'A': (0, 3)}
@@ -13,7 +13,7 @@ LEVEL_COLORS = {
     'all': '#2f80ed',
     'first_league': '#27ae60',
     'second_league': '#f2b800',
-    # 30.10: the top 5 first leagues, the leagues with VAR since 2017-2019
+    # the top 5 first leagues, the leagues with VAR since 2017-2019
     'top_5': '#c0392b',
 }
 
@@ -62,7 +62,7 @@ def plot_home_advantage(save_path: str | None = 'Fig_home_advantage.pdf',
     # ax.axvspan(2019.5, 2021.5, color='#e0e0e0', zorder=0)
     # ax.text(2020.5, 0.02, 'COVID-19', ha='center', va='bottom', fontsize=9, color='#555555')
 
-    # 30.10: from the data, the share of the pandemic matches (is_pandemic) of every season sets the darkness of its band:
+    # from the data, the share of the pandemic matches (is_pandemic) of every season sets the darkness of its band:
     # 2019: 13%, 2020: 93%, 2021: 9%
     pandemic_share = matches.groupby('season')['is_pandemic'].mean()
     for season, share in pandemic_share.items():
@@ -70,7 +70,7 @@ def plot_home_advantage(save_path: str | None = 'Fig_home_advantage.pdf',
             ax.axvspan(season - 0.5, season + 0.5, color='#9e9e9e', alpha=0.6 * share, linewidth=0, zorder=0)
     ax.text(2020, 0.02, 'COVID-19', ha='center', va='bottom', fontsize=9, color='#555555')
 
-    # 30.10: VAR in the top leagues: Bundesliga and Serie A 2017/2018, La Liga and Ligue 1 2018/2019, Premier League 2019/2020
+    # VAR in the top leagues: Bundesliga and Serie A 2017/2018, La Liga and Ligue 1 2018/2019, Premier League 2019/2020
     ax.axvline(2017, color='#555555', linestyle=':', linewidth=1, zorder=1)
     ax.text(2016.8, 0.02, 'VAR in top leagues', ha='right', va='bottom', fontsize=9, color='#555555')
 
@@ -89,7 +89,7 @@ def plot_home_advantage(save_path: str | None = 'Fig_home_advantage.pdf',
 
         ax.plot(by_season.index, by_season['points_difference'], marker='o', markersize=3,
                 color=color, label=label, linewidth=1.5 if level == 'all' else 1.)
-        # 30.10: no band for the top 5 (~1,800 matches per season, +-0.12): the band hides the other lines
+        # no band for the top 5 (~1,800 matches per season, +-0.12): the band hides the other lines
         if level != 'top_5':
             ax.fill_between(by_season.index, by_season['points_difference'] - error, by_season['points_difference'] + error,
                             color=color, alpha=0.15, linewidth=0)

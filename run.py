@@ -2,13 +2,12 @@ import warnings
 from pathlib import Path
 
 from config import config
-from full_pipeline import ALL_SEASONS, LEAGUE_FIT_ITERATIONS, SHARED_SHIFTS
 from national_pipeline import production
 from soccer.boostings.features import Features
 from soccer.boostings.outcomes_lgbm import OutcomesLGBM
 from soccer.club_ratings.preprocessing import ClubPreprocessing
 from soccer.club_ratings.ratings import Ratings
-from soccer.club_ratings.train_glicko import TrainGlicko
+from soccer.club_ratings.train_glicko import ALL_SEASONS, LEAGUE_FIT_ITERATIONS, SHARED_SHIFTS, TrainGlicko
 from soccer.national_ratings.preprocessing import NationalPreprocessing
 from soccer.national_ratings.ratings import NationalRatings
 from soccer.preprocessing import MatchesPreprocessor

@@ -10,6 +10,22 @@ from config import config
 from soccer.club_ratings.ratings import Ratings
 from utils.functions import save_pickle, load_pickle
 
+# train_test_split_season of the production params: all seasons are train seasons
+ALL_SEASONS = 10_000
+
+# the per-league fit of all leagues takes ~20 hours per iteration
+LEAGUE_FIT_ITERATIONS = 1
+
+# (param, delta, groups) for TrainGlicko.fit_shared_shift
+SHARED_SHIFTS = [('scoring_overall', 0.02, ('all', 'first', 'second')),
+                 ('draw_frequency', 0.02, ('all', 'first', 'second')),
+                 ('strength_overall', 0.008, ('all', 'first', 'second')),
+                 ('scoring', 0.02, ('all', 'first', 'second')),
+                 ('crowd', 0.02, ('all', 'first', 'second')),
+                 ('logistic', 0.02, ('all', 'first', 'second')),
+                 ('strength', 0.008, ('all', 'first', 'second')),
+                 ('ms_lift_update_mu', 5, ('all',))]
+
 
 class TrainGlicko(Ratings):
     """Fit parameters for the Glicko model."""

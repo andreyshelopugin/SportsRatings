@@ -12,7 +12,7 @@ class Markov(MatrixModels):
         super().__init__()
         self.big_score_matrix_size = self.score_matrix_size * self.score_matrix_size
 
-        # fitted on the W/D/L loss on the eval set of the lgbm (fit, 10.11), the loss is flat: not fully converged
+        # fitted on the W/D/L loss on the eval set of the lgbm (fit), the loss is flat: not fully converged
         self.low_scoring_00 = 0.025
         self.low_scoring_10_01 = 0.085
         self.low_scoring_11 = 0.04
@@ -221,7 +221,7 @@ class Markov(MatrixModels):
         print(f"\nTrain loss: {best_loss:.6f}")
         print(f"Test loss:  {test_loss:.6f}")
 
-        print(f"\nFinal params:")
+        print("\nFinal params:")
         print(f"  low_scoring_00: {self.low_scoring_00}")
         print(f"  low_scoring_10_01: {self.low_scoring_10_01}")
         print(f"  low_scoring_11: {self.low_scoring_11}")

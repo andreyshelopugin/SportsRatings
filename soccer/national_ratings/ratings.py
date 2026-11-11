@@ -26,8 +26,6 @@ class NationalRatings(Ratings):
         final stage without host: 0 (neutral venue)
         final stage with host: A_h - A_a, A_x = H_x * (gamma * (crowd_x + logistic_x) + strength_x * avg_mu + scoring_x * ge)
     gamma is global (final_stage_params): the share of the usual home advantage that the host of a final stage gets.
-    Before 28.10: alpha * (crowd_h - crowd_a) without host and alpha * host * crowd + beta * logistic with host,
-    the three params were not identified (crowd is almost the same for all countries, host and beta replace each other).
 
     RD grows with time: rd^2 + rd_growth^2 * period_days / 30 before each period, while rd < rd_threshold.
     """
@@ -78,10 +76,6 @@ class NationalRatings(Ratings):
         if final_stage_params_path.exists():
             self.final_stage_params = load_pickle(final_stage_params_path)
         else:
-            self.final_stage_params = self.init_final_stage_params.copy()
-
-        # the old format (alpha, host, beta) before 28.10: gamma starts from the default
-        if 'gamma' not in self.final_stage_params:
             self.final_stage_params = self.init_final_stage_params.copy()
 
         self.team_confederation = None
@@ -299,7 +293,7 @@ class NationalRatings(Ratings):
                 advantage = {'crowd': 0, 'logistic': 0, 'strength': 0, 'scoring': 0}
 
         elif not (home_is_host or away_is_host):
-            # a neutral venue: crowd is almost the same for all countries, alpha * (crowd_h - crowd_a) was ~0 (28.10)
+            # a neutral venue: no home advantage
             advantage = {'crowd': 0, 'logistic': 0, 'strength': 0, 'scoring': 0}
 
         else:

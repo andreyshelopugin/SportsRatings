@@ -29,7 +29,7 @@ class OutcomesLGBM(LightGBM):
                          metric='poisson',
                          cv_metric='valid poisson-mean',
                          n_estimators=10_000,
-                         # optuna 'night' (10.11), trial 42: CV poisson 0.869593 with 8,393 trees,
+                         # optuna_optimization, the best trial: CV poisson 0.869593 with 8,393 trees,
                          # the previous params (learning_rate 0.006, 146 leaves): 0.869820 with 8,020 trees
                          learning_rate=0.014855,
                          num_leaves=43,
@@ -344,7 +344,7 @@ class OutcomesLGBM(LightGBM):
         print("=" * 80)
 
         # metrics comparison
-        print(f"\n  Classification Metrics:")
+        print("\n  Classification Metrics:")
         for m in ["accuracy", "custom_log_loss", "brier_score"]:
             delta = metrics[m] - baseline_metrics[m]
             sign = "+" if delta >= 0 else ""

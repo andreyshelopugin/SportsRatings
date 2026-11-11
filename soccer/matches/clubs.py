@@ -123,7 +123,7 @@ class ClubDataPreprocessor(DataPreprocessor):
         self_play = df[df['home_team'] == df['away_team']]
         assert self_play.empty, f"Teams playing against themselves: {self_play.to_string()}"
 
-        assert set(df['tournament_type']) == self.club_tournaments, f"Invalid tournament_type values"
+        assert set(df['tournament_type']) == self.club_tournaments, "Invalid tournament_type values"
 
         assert df['match_id'].nunique() == df.shape[0], "there are duplicated match_id"
 

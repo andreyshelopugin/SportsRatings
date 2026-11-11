@@ -61,7 +61,6 @@ class DixonColes(MatrixModels):
         best_loss = np.inf
         best_param = None
 
-        # -0.06 was the boundary of the previous grid and the estimate with the new lgbm (10.11)
         dc_params = np.linspace(-0.12, -0.02, 101)
         for i, dc_param in enumerate(dc_params):
             self.dc_param = dc_param
