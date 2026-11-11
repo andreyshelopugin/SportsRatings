@@ -4,7 +4,7 @@ Order of a full rebuild:
     2. full_pipeline.production_fit         production params of the clubs (all seasons)
     3. evaluation_pipeline.main             train fit of the clubs (< 2021) and the sequential test predictions
     4. national_pipeline.train_fit, main    train fit and production params of the national teams
-    5. soccer/matrix_models/compare_models  Skellam, Dixon-Coles, Markov (run from soccer/matrix_models)
+    5. soccer/matrix_models/compare_models  Skellam, Dixon-Coles, Markov
     6. paper.main                           the tables below
 Results: data/soccer/tables/.
 Run from the root of the project. ~10 hours (the ablations with a refit are the longest, they can be commented out)."""
@@ -23,6 +23,8 @@ import diagnostics.national_ablation as national_ablation
 import diagnostics.national_extensions as national_extensions
 import diagnostics.national_vs_baselines as national_vs_baselines
 import diagnostics.params_interpretation as params_interpretation
+import diagnostics.score_models_metrics as score_models_metrics
+import diagnostics.transition_calibration as transition_calibration
 from soccer.club_ratings.ratings import Ratings
 from soccer.national_ratings.ratings import NationalRatings
 from utils.functions import stage
@@ -46,6 +48,9 @@ def ratings_tables():
 
 
 def main():
+    stage('clubs: Brier score and RPS of the score matrix models')
+    score_models_metrics.main()
+
     stage('clubs: Elo baseline')
     elo_baseline.main()
 
@@ -59,6 +64,9 @@ def main():
     ablation_refit.main()
 
     league_calibration_test.main()
+
+    stage('clubs: calibration of the season transitions')
+    transition_calibration.main()
 
     stage('national teams: Glicko vs the baselines')
     national_vs_baselines.main()

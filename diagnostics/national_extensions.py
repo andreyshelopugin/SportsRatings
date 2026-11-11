@@ -1,8 +1,7 @@
 """Extensions of the national model that did not reduce the test loss (the list of the paper):
     periods: rating periods by the calendar of the national teams (every international window and every match day
              of a final stage) instead of the calendar quarters, the global params refitted on the train matches.
-Test loss: matches since 2021-01-01,
-90 minutes, as in diagnostics/national_ablation.py. Every variant writes its own national glicko matches and params
+Test loss: matches since 2021-01-01, 90 minutes, as in diagnostics/national_ablation.py. Every variant writes its own national glicko matches and params
 (data/soccer/national_extensions/<variant>), the production files are not changed.
 Results: data/soccer/tables/national_extensions.csv.
 Run from the root of the project."""
@@ -27,7 +26,6 @@ pd.set_option('display.width', 5000)
 
 ROOT = Path(__file__).resolve().parent.parent
 FOLDER = ROOT / 'data/soccer/national_extensions'
-
 
 
 @contextmanager

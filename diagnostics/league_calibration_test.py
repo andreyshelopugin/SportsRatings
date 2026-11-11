@@ -1,7 +1,7 @@
-"""The held-out calibration of the league levels (Table 8 of the paper): actual - expected score per match
+"""The held-out calibration of the league levels (Table calibration of the paper): actual - expected score per match
 (score: 1 win, 0.5 draw, 0 loss; expected: p_win + 0.5 * p_draw) of the clubs of a league in the international
 club matches of the test seasons (>= 2021), from the sequential predictions of the train fit
-(evaluation_pipeline.save_test_predictions). A match between two leagues counts for both.
+(EvaluateGlicko.save_test_predictions). A match between two leagues counts for both.
 The noise level of the mean of n matches: 0.44 / sqrt(n) (the standard deviation of the score of one match ~0.44).
 Result: data/soccer/tables/league_calibration_test.csv.
 Run from the root of the project."""

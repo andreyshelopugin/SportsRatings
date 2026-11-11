@@ -1,4 +1,4 @@
-"""31.10: the national teams table of the paper, as glicko_vs_baselines.py for the clubs:
+"""The national teams table of the paper, as glicko_vs_baselines.py for the clubs:
     1. Glicko with the train-fitted params (data/soccer/params/national_train_fit, matches before 2021-01-01),
        sequential predictions of the test matches (as calculate_test_loss, prediction_records)
     2. Elo with Davidson draws (diagnostics/elo_baseline.run_elo), K, h, nu by a grid on the train matches
@@ -24,7 +24,7 @@ from diagnostics.national_ablation import national_params
 from national_pipeline import TRAIN_FIT_FOLDER
 from soccer.national_ratings.train_glicko import TrainNationalGlicko
 
-BASELINE_PREDICTIONS = ROOT / 'soccer/matrix_models/data/soccer/tables/matrix_models/test_predictions.feather'
+BASELINE_PREDICTIONS = ROOT / 'data/soccer/tables/matrix_models/test_predictions.feather'
 GLICKO_PREDICTIONS = ROOT / 'data/soccer/tables/national_glicko_test_predictions.feather'
 ELO_GRID_RESULTS = ROOT / 'data/soccer/tables/national_elo_grid.csv'
 RESULTS = ROOT / 'data/soccer/tables/national_vs_baselines.csv'
@@ -33,9 +33,7 @@ SPLIT_DATE = pd.Timestamp('2021-01-01')
 BASELINES = ['skellam', 'dixon_coles', 'markov']
 N_BOOTSTRAP = 1000
 
-# K_GRID = (10, 20, 30, 40, 50, 60, 80)
-# 31.10 18:20: the best K 80 at the edge -> extended
-K_GRID = (40, 60, 80, 100, 120, 150, 200)
+K_GRID = (10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 200)
 HOME_GRID = (40, 60, 80, 100, 120, 140, 160, 200)
 DRAW_GRID = (0.6, 0.7, 0.8, 0.9, 1.0, 1.1)
 

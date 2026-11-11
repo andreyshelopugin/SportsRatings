@@ -1,4 +1,4 @@
-"""31.10: the ablation with a refit (the honest version of diagnostics/ablation.py): for every variant one component
+"""The ablation of the paper with a refit (ablation.py: without it): for every variant one component
 of the model is switched off and the other params are refitted on the train seasons (< 2021), then the test loss.
 The refit is the global params + the shared shifts (the same stages as the production fit without the per-league fit,
 ~1 hour per variant): the other params can compensate the removed component, so the increase of the test loss
@@ -18,8 +18,9 @@ ROOT = Path(__file__).resolve().parent.parent
 os.chdir(ROOT)
 
 from config import config
-from full_pipeline import SHARED_SHIFTS, stage
+from full_pipeline import SHARED_SHIFTS
 from soccer.club_ratings.evaluate_glicko import EvaluateGlicko
+from utils.functions import stage
 from utils.metrics import three_outcomes_log_loss
 
 warnings.filterwarnings('ignore')
@@ -113,7 +114,7 @@ def refit(variant: str):
 
 
 def test_loss(variant: str) -> dict:
-    """Test loss as in evaluate (sequential, seasons >= 2021, no weights, no discount, 90 minutes)."""
+    """Test loss as in EvaluateGlicko.evaluate (sequential, seasons >= 2021, no weights, no discount, 90 minutes)."""
 
     model = AblationGlicko(variant)
     model.world_cup_loss_weight = 1

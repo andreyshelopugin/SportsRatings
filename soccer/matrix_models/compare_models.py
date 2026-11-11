@@ -12,7 +12,8 @@ from soccer.matrix_models.poisson import Poisson
 from soccer.matrix_models.stats_utils import win_tie_loss_probs
 from utils.metrics import three_outcomes_log_loss_string_outcome
 
-RESULTS_DIR = Path('data/soccer/tables/matrix_models')
+# from the root of the project, the script can be run from any directory
+RESULTS_DIR = Path(__file__).resolve().parents[2] / 'data/soccer/tables/matrix_models'
 
 
 def probabilities(model, matches: pd.DataFrame, desc: str) -> np.ndarray:

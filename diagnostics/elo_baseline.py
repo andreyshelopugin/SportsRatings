@@ -1,4 +1,4 @@
-"""30.10: the Elo baseline for the paper: the classical Elo rating with the home advantage and the draws of Davidson,
+"""The Elo baseline of the paper: the classical Elo rating with the home advantage and the draws of Davidson,
 all clubs start from 1500 (no league-aware initialization, no transitions), as the standard Elo of the literature.
     q_home = 10 ** ((r_home + h * home_indicator) / 400), q_away = 10 ** (r_away / 400)
     P(H) = q_home / D, P(A) = q_away / D, P(D) = nu * sqrt(q_home * q_away) / D, D = q_home + q_away + nu * sqrt(q_home * q_away)
@@ -18,20 +18,17 @@ from config import config
 ROOT = Path(__file__).resolve().parent.parent
 
 PREDICTIONS = ROOT / 'data/soccer/tables/elo_test_predictions.feather'
-# GRID_RESULTS = ROOT / 'data/soccer/tables/elo_grid.csv'
-# 30.10: the second grid in its own file, the first is kept
-GRID_RESULTS = ROOT / 'data/soccer/tables/elo_grid_2.csv'
+GRID_RESULTS = ROOT / 'data/soccer/tables/elo_grid.csv'
 
 TRAIN_TEST_SPLIT_SEASON = 2021
+# the first two seasons are excluded from the train loss, as in Glicko (the ratings are not established)
+FIRST_TRAIN_LOSS_SEASON = 2002
 INIT_RATING = 1500.
 
-# K_GRID = (10, 15, 20, 25, 30, 40)
-# HOME_GRID = (40, 60, 80, 100)
-# DRAW_GRID = (0.6, 0.7, 0.8, 0.9, 1.0, 1.1)
-# 30.10 21:00: the first grid: best K 30, h 100 (the edge), nu 0.8, train 0.588770, test 0.591207 -> extended around it
-K_GRID = (30, 35, 40, 50)
-HOME_GRID = (100, 120, 140, 160)
-DRAW_GRID = (0.75, 0.8, 0.85)
+# ~2 seconds per point, ~15 minutes for the grid
+K_GRID = (10, 15, 20, 25, 30, 35, 40, 50)
+HOME_GRID = (40, 60, 80, 100, 120, 140, 160)
+DRAW_GRID = (0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 1.0, 1.1)
 
 
 def load_matches() -> pd.DataFrame:
@@ -98,8 +95,7 @@ def main():
         probs = run_elo(home, away, home_indicator, outcome, len(teams), k, home_advantage, draw)
         losses = outcome_log_loss(probs, outcome)
 
-        # the first two seasons are excluded from the train loss, as in Glicko (the ratings are not established)
-        is_train = ~is_test & (matches['season'].to_numpy() >= 2002)
+        is_train = ~is_test & (matches['season'].to_numpy() >= FIRST_TRAIN_LOSS_SEASON)
         rows.append({'k': k, 'home_advantage': home_advantage, 'draw': draw,
                      'train_loss': losses[is_train].mean(), 'test_loss': losses[is_test].mean()})
         print(rows[-1] | {'seconds': round(time() - start)}, flush=True)

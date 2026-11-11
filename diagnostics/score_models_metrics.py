@@ -1,12 +1,12 @@
-"""30.10: Brier score and RPS of the baselines for the paper (Table score_models),
+"""Brier score and RPS of the baselines for the paper (Table score_models),
 from the probabilities saved by soccer/matrix_models/compare_models.py (test seasons, 90 minutes)."""
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-# relative to the working directory, as in compare_models.py (PyCharm runs it from soccer/matrix_models)
-RESULTS_DIR = Path('data/soccer/tables/matrix_models')
+# from the root of the project, as in compare_models.py
+RESULTS_DIR = Path(__file__).resolve().parent.parent / 'data/soccer/tables/matrix_models'
 MODELS = ['skellam', 'dixon_coles', 'markov']
 
 

@@ -1,8 +1,8 @@
-"""30.10: the ablation of the paper (knock-out, without a refit): one component of the model is switched off,
-the other params are the train-fitted ones (evaluation_league_params.pkl), the test loss as in evaluate
-(sequential predictions, seasons >= 2021, no weights, no discount, 90 minutes) for all and international matches.
-Without a refit the other params do not compensate the removed component: the differences are upper bounds of the
-loss of the full model (lower bounds of the contribution are not given), see the text of the paper.
+"""The ablation of the paper without a refit (knock-out): one component of the model is switched off,
+the other params are the train-fitted ones (evaluation_league_params.pkl), the test loss as in EvaluateGlicko.evaluate
+(sequential predictions, seasons >= 2021, no weights, no discount, 90 minutes) for all, domestic and international matches.
+Without a refit the other params do not compensate the removed component, so the differences overstate its contribution,
+the refit is in ablation_refit.py.
 Run from the root of the project or from diagnostics/ (the paths are from the root)."""
 import os
 from pathlib import Path
@@ -50,7 +50,6 @@ VARIANTS = {
     'no_promotion_relegation_lift': (no_lift, {}),
     'no_newcomer_offset': (None, {'ms_new_team_update_mu': 0}),
     'no_season_rd_growth': (None, {'ms_update_rd_first': 0, 'ms_update_rd_second': 0}),
-    'no_extra_time_model': (None, {'use_extra_time': False}),
 }
 
 
@@ -68,8 +67,6 @@ def test_loss(variant: str) -> dict:
     league_params = model.load_params(config.soccer['params'][model.league_params_name])
 
     for name, value in attributes.items():
-        if name == 'use_extra_time':
-            continue
         setattr(model, name, value)
 
     if change_params is not None:
@@ -103,9 +100,6 @@ def test_loss(variant: str) -> dict:
 def main():
     rows = []
     for variant in VARIANTS:
-        if variant == 'no_extra_time_model':
-            # TODO: the 90 minutes outcome does not depend on the extra time params, only the updates of the ET matches
-            continue
         rows.append(test_loss(variant))
         print(rows[-1], flush=True)
 

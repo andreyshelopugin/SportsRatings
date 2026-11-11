@@ -1,14 +1,4 @@
-import warnings
-
-import numpy as np
-import pandas as pd
-
-from config import config
-from soccer.club_ratings.ratings import Ratings
-from utils.functions import load_pickle
-
-"""
-Checks of the season transitions: are the teams after a transition rated right in their first season?
+"""Checks of the season transitions: are the teams after a transition rated right in their first season?
 actual - expected score per match (p_win + 0.5 * p_draw as in Glicko, ratings before the match), domestic matches of the first season:
     newcomers (missed_previous)        - checks the newcomer offset (ms_new_team_update_mu = 90 from the anchor)
     promoted (to a first league)       - checks +lift
@@ -16,9 +6,17 @@ actual - expected score per match (p_win + 0.5 * p_draw as in Glicko, ratings be
     continuing (same_league)           - reference, must be ~0
     international matches by league    - checks the level of the leagues (Iran, Romania, 2023+)
 A group with actual - expected < 0 is overrated after the transition, > 0 underrated.
-Run:
-    .venv_core/bin/python transition_calibration.py
-"""
+The production params (all seasons), the transitions since FIRST_SEASON, the international matches since RECENT_SEASON.
+Run from the root of the project."""
+import warnings
+
+import numpy as np
+import pandas as pd
+
+from config import config
+from soccer.club_ratings.ratings import Ratings
+
+
 
 FIRST_SEASON = 2010
 RECENT_SEASON = 2023
@@ -26,9 +24,9 @@ RECENT_SEASON = 2023
 INTERNATIONAL_LEAGUES = ['Iran. First League', 'Romania. First League', 'Uzbekistan. First League',
                          'Saudi Arabia. First League', 'Japan. First League', 'Qatar. First League',
                          'Croatia. First League', 'Czech Republic. First League',
-                         # South America: the level vs Europe only by the Club World Cup (27.10)
+                         # South America: the level vs Europe only by the Club World Cup
                          'Brazil. First League', 'Argentina. First League',
-                         # out of place in the league table by the analyst (27.10)
+                         # the leagues with a doubtful place in the league table
                          'Greece. First League', 'Cyprus. First League', 'Scotland. First League',
                          'United Arab Emirates. First League', 'Turkey. First League', 'Algeria. First League',
                          'Mexico. First League', 'Norway. First League', 'Poland. First League']
@@ -70,9 +68,7 @@ def calibration() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     predictions = predictions.loc[predictions['year'] >= FIRST_SEASON]
 
     # actual - expected score in the terms of Glicko (win 1, draw 0.5, loss 0), not the 3-point system:
-    # the 3-point system counts a draw as 1/3 of a win and mixes the level of a team with its draw tendency (28.10)
-    # predictions['diff'] = (predictions['outcome'].map({1.: 3., .5: 1., 0.: 0.})
-    #                        - (3 * predictions['p_team_win'] + predictions['p_draw']))
+    # the 3-point system counts a draw as 1/3 of a win and mixes the level of a team with its draw tendency
     predictions['diff'] = predictions['outcome'] - (predictions['p_team_win'] + 0.5 * predictions['p_draw'])
 
     groups = team_season_groups(predictions, model)
@@ -107,7 +103,7 @@ def calibration() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     return by_group, by_country, by_league
 
 
-if __name__ == '__main__':
+def main():
     warnings.filterwarnings('ignore')
     pd.set_option('display.width', 250)
     pd.set_option('display.max_rows', None)
@@ -125,3 +121,7 @@ if __name__ == '__main__':
 
     is_large = leagues['n_matches'] >= 20
     print(f'mean |diff| over {is_large.sum()} leagues with >= 20 matches: {leagues.loc[is_large, "diff"].abs().mean():.3f}')
+
+
+if __name__ == '__main__':
+    main()

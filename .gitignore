@@ -9,3 +9,8 @@ datasets/soccer/*.feather
 data/soccer/tables/
 data/soccer/club_matches.feather
 data/soccer/national_team_matches.feather
+# working copies of the params of the diagnostics and the backups of the national params
+data/soccer/params/ablation/
+data/soccer/params/national_ablation_refit/
+data/soccer/params/national_before_*/
+data/soccer/national_extensions/
