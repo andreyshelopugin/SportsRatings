@@ -1,7 +1,7 @@
 # SportsRatings
 
 Code and data for **"A Modified Glicko Model for Rating Soccer Clubs and National Teams Worldwide"**
-(submitted to *SN Computer Science*). An arXiv preprint will be available soon.
+([arXiv:2611.15378](https://arxiv.org/abs/2611.15378), under review at *SN Computer Science*).
 
 The model puts clubs and national teams of all countries on a single probabilistic rating scale:
 a Glicko rating system with strength-dependent draws and home advantage, league-aware initialization
@@ -10,7 +10,9 @@ promotion and relegation rules, and goals expectations of a gradient boosting mo
 
 ## Ratings
 
-The current ratings are in the root of the repository:
+The current ratings are in the root of the repository. They are as of summer 2026:
+the clubs after the last finished seasons (2025/26 for the leagues that play autumn to spring, 2025 for the calendar-year leagues),
+the national teams after the 2026 World Cup. Seasons in progress are not included yet.
 
 | File | Content |
 |---|---|
@@ -105,5 +107,11 @@ will be adjusted or removed.
 
 ## Citation
 
-- Journal version (club ratings methodology): *link will be added*
-- arXiv preprint: *link will be added*
+```bibtex
+@article{shelopugin2026modified,
+  title={A Modified Glicko Model for Rating Soccer Clubs and National Teams Worldwide},
+  author={Shelopugin, Andrei and Sirotkin, Alexander},
+  journal={arXiv preprint arXiv:2611.15378},
+  year={2026}
+}
+```
